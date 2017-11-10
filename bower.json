@@ -1,11 +1,11 @@
 {
-  "name": "sysadminweb",
-  "description": "",
-  "main": "",
+  "name": "John",
+  "description": "Sysadmin",
+  "main": "bower.jason",
   "authors": [
     "John155 <john.ivan.fox@outlook.com>"
   ],
-  "license": "MIT",
+  "license": "MLT",
   "homepage": "https://github.com/John155/Test",
   "ignore": [
     "**/.*",
@@ -15,7 +15,9 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "^1.6.6",
+    "bootstrap": "boostrap#^3.3.7",
+    "masonry": "desandro/masonry#^4.2.0",
+    "jquery": "^3.2.1",
     "angular-bootstrap": "^2.5.0"
   }
 }
