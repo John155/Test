@@ -6,12 +6,15 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@angular/cdk": "^5.0.0-rc0",
+    "@angular/material": "^5.0.0-rc0",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "ejs": "~2.5.7",
-    "express": "~4.15.5",
+    "express": "^4.15.5",
     "morgan": "~1.9.0",
+    "ngx-bootstrap": "^2.0.0-beta.8",
     "serve-favicon": "~2.4.5"
   }
 }

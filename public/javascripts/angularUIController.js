@@ -1,20 +1,20 @@
+angular.module('datepickerValidations', ['ngMaterial', 'ngMessages']).controller('AppCtrl', function() {
+    this.myDate = new Date();
 
-var express = require('express');
-var router = express.Router();
+    this.minDate = new Date(
+        this.myDate.getFullYear(),
+        this.myDate.getMonth() - 2,
+        this.myDate.getDate()
+    );
 
-var my = angular.module("MyApp",['ngMaterial', 'ngMessages', 'material.svgAssetsCache'])
+    this.maxDate = new Date(
+        this.myDate.getFullYear(),
+        this.myDate.getMonth() + 2,
+        this.myDate.getDate()
+    );
 
-    my.controller('AppCtrl', function($scope) {
-        $scope.title1 = 'Button';
-        $scope.title4 = 'Warn';
-        $scope.isDisabled = true;
-
-        $scope.googleUrl = 'http://google.com';
-
-    });
-
-module.exports = router;
-/**
- Copyright 2016 Google Inc. All Rights Reserved.
- Use of this source code is governed by an MIT-style license that can be foundin the LICENSE file at http://material.angularjs.org/HEAD/license.
- **/
+    this.onlyWeekendsPredicate = function(date) {
+        var day = date.getDay();
+        return day === 0 || day === 6;
+    };
+});
