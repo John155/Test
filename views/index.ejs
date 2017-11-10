@@ -1,62 +1,64 @@
 <!DOCTYPE html>
-<html ng-app>
+<html>
 <head>
+
     <title>Bootstrap Example</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js"></script>
+    <script src="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.5/angular-material.js"></script>
     <script src="/bower_components/angular-bootstrap/ui-bootstrap.js"></script>
     <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="/javascripts/angularUIController.js"></script>
+    <link rel="stylesheet prefetch" href="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.5/angular-material.css">
+    <link href="/stylesheets/style.css" rel="stylesheet" >
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 </head>
 <body>
+<div ng-controller="AppCtrl" ng-cloak="" class="toolbardemoBasicUsage" ng-app="MyApp">
 
-<div>
-    <md-content ng-controller="AppCtrl as ctrl" layout-padding ng-cloak>
-        <div layout-gt-xs="row">
-            <div flex-gt-xs>
-                <h4>Date-picker with min date and max date</h4>
-                <md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"
-                               md-min-date="ctrl.minDate" md-max-date="ctrl.maxDate"></md-datepicker>
+    <md-content>
+
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <md-truncate style="position: absolute; left: 90px; right: 170px; top: 13px; bottom: 13px;">Kalender</md-truncate>
+
+                <span flex=""></span>
+                <i class="material-icons">account_circle</i>
+                <md-button class="md-raised">
+                    Anmelden
+                </md-button>
+                <md-button class="md-raised" aria-label="Anmelden">
+                    Registrieren
+                </md-button>
+
             </div>
+        </md-toolbar>
 
-            <div flex-gt-xs>
-                <h4>Only weekends are selectable</h4>
-                <md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"
-                               md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>
+
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <div ng-controller="cltmy">
+                    <md-datepicker  ng-model="ctrl.myDate" md-placeholder="Enter date"></md-datepicker>
+                </div>
+                <span flex=""></span>
             </div>
-        </div>
+        </md-toolbar>
 
-        <div layout-gt-xs="row">
-            <div flex-gt-xs>
-                <h4>Only weekends within given range are selectable</h4>
-                <md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"
-                               md-min-date="ctrl.minDate" md-max-date="ctrl.maxDate"
-                               md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>
-            </div>
-
-            <form name="myForm" flex-gt-xs>
-                <h4>Inside a md-input-container</h4>
-
-                <md-input-container>
-                    <label>Enter date</label>
-                    <md-datepicker ng-model="ctrl.myDate" name="dateField" md-min-date="ctrl.minDate"
-                                   md-max-date="ctrl.maxDate"></md-datepicker>
-
-                    <div ng-messages="myForm.dateField.$error">
-                        <div ng-message="valid">The entered value is not a date!</div>
-                        <div ng-message="required">This date is required!</div>
-                        <div ng-message="mindate">Date is too early!</div>
-                        <div ng-message="maxdate">Date is too late!</div>
-                    </div>
-                </md-input-container>
-            </form>
-        </div>
     </md-content>
 </div>
 
+<!--
+Copyright 2016 Google Inc. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that can be foundin the LICENSE file at http://material.angularjs.org/HEAD/license.
+-->
 </body>
 </html>
