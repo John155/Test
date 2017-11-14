@@ -1,61 +1,98 @@
-<!DOCTYPE html>
-<html ng-app>
+<html lang = "en">
 <head>
-    <title>Bootstrap Example</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
-    <script src="/bower_components/angular-bootstrap/ui-bootstrap.js"></script>
-    <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-    <script src="/javascripts/angularUIController.js"></script>
+    <link rel = "stylesheet"
+          href = "https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+    <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+    <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+    <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+    <script src = "https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+    <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <style>
+        .box {
+            color:white;
+            padding:10px;
+            text-align:center;
+            border-style: inset;
+        }
+    </style>
+
+    <script language = "javascript">
+        angular
+            .module('firstApplication', ['ngMaterial'])
+            .controller('layoutController', layoutController);
+            .controller('inputController', inputController);
+
+        function layoutController ($scope) {
+        }
+
+        function inputController ($scope) {
+            $scope.project = {
+                comments: 'Comments',
+            };
+        }
+
+    </script>
+
+
+
 </head>
-<body>
 
-<div>
-    <md-content ng-controller="AppCtrl as ctrl" layout-padding ng-cloak>
-        <div layout-gt-xs="row">
-            <div flex-gt-xs>
-                <h4>Date-picker with min date and max date</h4>
-                <md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"
-                               md-min-date="ctrl.minDate" md-max-date="ctrl.maxDate"></md-datepicker>
-            </div>
+<body ng-app = "firstApplication">
+<div id = "layoutContainer" ng-controller = "layoutController as ctrl"
+     style = "height:900px;" ng-cloak>
+    <div layout = "row" layout-xs = "column">
+        <div flex = "70">Terminplaner</div>
+        <div flex = "30">
+            <div id = "inputContainer" class = "inputDemo"
+                 ng-controller = "inputController as ctrl" ng-cloak>
+                <md-content layout-padding>
+                    <form name = "projectForm">
 
-            <div flex-gt-xs>
-                <h4>Only weekends are selectable</h4>
-                <md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"
-                               md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>
+                        <md-input-container class = "md-block">
+                            <label>User Name</label>
+                            <input required name = "userName" ng-model = "project.userName">
+                            <div ng-messages = "projectForm.userName.$error">
+                                <div ng-message = "required">This is required.</div>
+                            </div>
+                        </md-input-container>
+
+                        <md-input-container class = "md-block">
+                            <label>Email</label>
+                            <input required type = "email" name = "userEmail"
+                                   ng-model = "project.userEmail"
+                                   minlength = "10" maxlength = "100" ng-pattern = "/^.+@.+\..+$/" />
+                            <div ng-messages = "projectForm.userEmail.$error" role = "alert">
+                                <div ng-message-exp = "['required', 'minlength', 'maxlength',
+                        'pattern']">
+                                    Your email must be between 10 and 100 characters long and should
+                                    be a valid email address.
+                                </div>
+                            </div>
+                        </md-input-container>
+
+                        <md-input-container class = "md-block">
+                            <label>Comments</label>
+                            <input md-maxlength = "300" required name = "comments"
+                                   ng-model = "project.comments">
+                            <div ng-messages = "projectForm.comments.$error">
+                                <div ng-message = "required">This is required.</div>
+                                <div ng-message = "md-maxlength">The comments has to be less
+                                    than 300 characters long.</div>
+                            </div>
+                        </md-input-container>
+
+                    </form>
+                </md-content>
             </div>
         </div>
+    </div>
 
-        <div layout-gt-xs="row">
-            <div flex-gt-xs>
-                <h4>Only weekends within given range are selectable</h4>
-                <md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"
-                               md-min-date="ctrl.minDate" md-max-date="ctrl.maxDate"
-                               md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>
-            </div>
-
-            <form name="myForm" flex-gt-xs>
-                <h4>Inside a md-input-container</h4>
-
-                <md-input-container>
-                    <label>Enter date</label>
-                    <md-datepicker ng-model="ctrl.myDate" name="dateField" md-min-date="ctrl.minDate"
-                                   md-max-date="ctrl.maxDate"></md-datepicker>
-
-                    <div ng-messages="myForm.dateField.$error">
-                        <div ng-message="valid">The entered value is not a date!</div>
-                        <div ng-message="required">This date is required!</div>
-                        <div ng-message="mindate">Date is too early!</div>
-                        <div ng-message="maxdate">Date is too late!</div>
-                    </div>
-                </md-input-container>
-            </form>
-        </div>
-    </md-content>
+    <div layout = "column" layout-xs = "column">
+        <div flex = "10">Toolbar</div>
+        <div flex = "90">Kalender</div>
+    </div>
 </div>
 
 </body>
