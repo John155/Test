@@ -1,10 +1,8 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+md-datepicker-input {
+  background: magenta;
 }
-
-a {
-  color: #00B7FF;
+owntoolbar{
+  background: white;
 }
 
 .toolbardemoBasicUsage md-toolbar md-icon.md-default-theme {

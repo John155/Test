@@ -1,99 +1,64 @@
-<html lang = "en">
+<!DOCTYPE html>
+<html>
 <head>
-    <link rel = "stylesheet"
-          href = "https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
-    <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-    <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
-    <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
-    <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
-    <script src = "https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
-    <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
 
-    <style>
-        .box {
-            color:white;
-            padding:10px;
-            text-align:center;
-            border-style: inset;
-        }
-    </style>
-
-    <script language = "javascript">
-        angular
-            .module('firstApplication', ['ngMaterial'])
-            .controller('layoutController', layoutController);
-            .controller('inputController', inputController);
-
-        function layoutController ($scope) {
-        }
-
-        function inputController ($scope) {
-            $scope.project = {
-                comments: 'Comments',
-            };
-        }
-
-    </script>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
 
 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js"></script>
+    <script src="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.5/angular-material.js"></script>
+    <script src="/bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+    <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="/javascripts/angularUIController.js"></script>
+    <link rel="stylesheet prefetch" href="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.5/angular-material.css">
+    <link href="/stylesheets/style.css" rel="stylesheet" >
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 </head>
+<body>
+<div ng-controller="AppCtrl" ng-cloak="" class="toolbardemoBasicUsage" ng-app="MyApp">
 
-<body ng-app = "firstApplication">
-<div id = "layoutContainer" ng-controller = "layoutController as ctrl"
-     style = "height:900px;" ng-cloak>
-    <div layout = "row" layout-xs = "column">
-        <div flex = "70">Terminplaner</div>
-        <div flex = "30">
-            <div id = "inputContainer" class = "inputDemo"
-                 ng-controller = "inputController as ctrl" ng-cloak>
-                <md-content layout-padding>
-                    <form name = "projectForm">
+    <md-content>
 
-                        <md-input-container class = "md-block">
-                            <label>User Name</label>
-                            <input required name = "userName" ng-model = "project.userName">
-                            <div ng-messages = "projectForm.userName.$error">
-                                <div ng-message = "required">This is required.</div>
-                            </div>
-                        </md-input-container>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <md-truncate style="position: absolute; left: 90px; right: 170px; top: 13px; bottom: 13px;">Kalender</md-truncate>
 
-                        <md-input-container class = "md-block">
-                            <label>Email</label>
-                            <input required type = "email" name = "userEmail"
-                                   ng-model = "project.userEmail"
-                                   minlength = "10" maxlength = "100" ng-pattern = "/^.+@.+\..+$/" />
-                            <div ng-messages = "projectForm.userEmail.$error" role = "alert">
-                                <div ng-message-exp = "['required', 'minlength', 'maxlength',
-                        'pattern']">
-                                    Your email must be between 10 and 100 characters long and should
-                                    be a valid email address.
-                                </div>
-                            </div>
-                        </md-input-container>
+                <span flex=""></span>
+                <i class="material-icons">account_circle</i>
+                <md-button class="md-raised">
+                    Anmelden
+                </md-button>
+                <md-button class="md-raised" aria-label="Anmelden">
+                    Registrieren
+                </md-button>
 
-                        <md-input-container class = "md-block">
-                            <label>Comments</label>
-                            <input md-maxlength = "300" required name = "comments"
-                                   ng-model = "project.comments">
-                            <div ng-messages = "projectForm.comments.$error">
-                                <div ng-message = "required">This is required.</div>
-                                <div ng-message = "md-maxlength">The comments has to be less
-                                    than 300 characters long.</div>
-                            </div>
-                        </md-input-container>
-
-                    </form>
-                </md-content>
             </div>
-        </div>
-    </div>
+        </md-toolbar>
 
-    <div layout = "column" layout-xs = "column">
-        <div flex = "10">Toolbar</div>
-        <div flex = "90">Kalender</div>
-    </div>
+
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <div ng-controller="cltmy">
+                    <md-datepicker  ng-model="ctrl.myDate" md-placeholder="Enter date"></md-datepicker>
+                </div>
+                <span flex=""></span>
+            </div>
+        </md-toolbar>
+
+    </md-content>
 </div>
 
+<!--
+Copyright 2016 Google Inc. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that can be foundin the LICENSE file at http://material.angularjs.org/HEAD/license.
+-->
 </body>
 </html>
