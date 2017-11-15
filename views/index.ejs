@@ -23,7 +23,7 @@
 
 </head>
 <body>
-<div ng-app="MyApp">
+<div ng-app="MyApp" ng-controller="AppCtrl">
     <div ng-cloak="" class="toolbardemoBasicUsage">
         <md-content>
 
@@ -31,27 +31,26 @@
                 <div class="md-toolbar-tools">
                     <md-truncate style="position: absolute; left: 90px; right: 170px; top: 13px; bottom: 13px;">Kalender</md-truncate>
 
-                    <span flex=""></span>
-                    <i class="material-icons">account_circle</i>
-                    <md-button class="md-raised">
-                        Anmelden
-                    </md-button>
-                    <md-button class="md-raised" aria-label="Anmelden">
-                        Registrieren
-                    </md-button>
+                <span flex=""></span>
+                <i class="material-icons">account_circle</i>
+                <md-button class="md-raised">
+                    Anmelden
+                </md-button>
+                <md-button class="md-raised" ng-click="editevent(event)" aria-label="Anmelden">
+                    Registrieren
+                </md-button>
 
                 </div>
             </md-toolbar>
 
-
-            <md-toolbar>
-                <div class="md-toolbar-tools">
-                    <div ng-controller="cltmy">
-                        <md-datepicker  ng-model="ctrl.myDate" md-placeholder="Enter date"></md-datepicker>
-                    </div>
-                    <span flex=""></span>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <div ng-controller="cltmy">
+                    <md-datepicker  ng-model="ctrl.myDate" md-placeholder="Enter date"></md-datepicker>
                 </div>
-            </md-toolbar>
+                <span flex=""></span>
+            </div>
+        </md-toolbar>
 
         </md-content>
     </div>

@@ -1310,23 +1310,23 @@ var csp = function() {
  * others ignored.
  *
  * @example
- * This example shows how to force jqLite using the `ngJq` directive to the `html` tag.
- ```html
- <!doctype html>
- <html ng-app ng-jq>
+ * This example shows how to force jqLite using the `ngJq` directive to the `ejs` tag.
+ ```ejs
+ <!doctype ejs>
+ <ejs ng-app ng-jq>
  ...
  ...
- </html>
+ </ejs>
  ```
  * @example
  * This example shows how to use a jQuery based library of a different name.
  * The library name must be available at the top most 'window'.
- ```html
- <!doctype html>
- <html ng-app ng-jq="jQueryLib">
+ ```ejs
+ <!doctype ejs>
+ <ejs ng-app ng-jq="jQueryLib">
  ...
  ...
- </html>
+ </ejs>
  ```
  */
 var jq = function() {
@@ -1882,9 +1882,9 @@ function angularInit(element, bootstrap) {
  * causing animations to stop working and making the injector inaccessible from outside the app.
  * </div>
  *
- * ```html
- * <!doctype html>
- * <html>
+ * ```ejs
+ * <!doctype ejs>
+ * <ejs>
  * <body>
  * <div ng-controller="WelcomeController">
  *   {{greeting}}
@@ -1899,7 +1899,7 @@ function angularInit(element, bootstrap) {
  *   angular.bootstrap(document, ['demo']);
  * </script>
  * </body>
- * </html>
+ * </ejs>
  * ```
  *
  * @param {DOMElement} element DOM element which is the root of angular application.
@@ -3005,7 +3005,7 @@ function publishExternalAPI(angular) {
  * - [`eq()`](http://api.jquery.com/eq/)
  * - [`find()`](http://api.jquery.com/find/) - Limited to lookups by tag name
  * - [`hasClass()`](http://api.jquery.com/hasClass/)
- * - [`html()`](http://api.jquery.com/html/)
+ * - [`ejs()`](http://api.jquery.com/html/)
  * - [`next()`](http://api.jquery.com/next/) - Does not support selectors
  * - [`on()`](http://api.jquery.com/on/) - Does not support namespaces, selectors or eventData
  * - [`off()`](http://api.jquery.com/off/) - Does not support namespaces, selectors or event object as parameter
@@ -3144,10 +3144,10 @@ function jqLiteBuildFragment(html, context) {
       nodes = [], i;
 
   if (jqLiteIsTextNode(html)) {
-    // Convert non-html into a text node
+    // Convert non-ejs into a text node
     nodes.push(context.createTextNode(html));
   } else {
-    // Convert html into DOM nodes
+    // Convert ejs into DOM nodes
     tmp = fragment.appendChild(context.createElement('div'));
     tag = (TAG_NAME_REGEXP.exec(html) || ['', ''])[1].toLowerCase();
     wrap = wrapMap[tag] || wrapMap._default;
@@ -3415,7 +3415,7 @@ function jqLiteController(element, name) {
 }
 
 function jqLiteInheritedData(element, name, value) {
-  // if element is the document object work with the html element instead
+  // if element is the document object work with the ejs element instead
   // this makes $(document).scope() possible
   if (element.nodeType === NODE_TYPE_DOCUMENT) {
     element = element.documentElement;
@@ -7042,8 +7042,8 @@ function $CacheFactoryProvider() {
  *
  * Adding via the `script` tag:
  *
- * ```html
- *   <script type="text/ng-template" id="templateId.html">
+ * ```ejs
+ *   <script type="text/ng-template" id="templateId.ejs">
  *     <p>This is the content of the template</p>
  *   </script>
  * ```
@@ -7057,20 +7057,20 @@ function $CacheFactoryProvider() {
  * ```js
  * var myApp = angular.module('myApp', []);
  * myApp.run(function($templateCache) {
- *   $templateCache.put('templateId.html', 'This is the content of the template');
+ *   $templateCache.put('templateId.ejs', 'This is the content of the template');
  * });
  * ```
  *
  * To retrieve the template later, simply use it in your component:
  * ```js
  * myApp.component('myComponent', {
- *    templateUrl: 'templateId.html'
+ *    templateUrl: 'templateId.ejs'
  * });
  * ```
  *
  * or get it via the `$templateCache` service:
  * ```js
- * $templateCache.get('templateId.html')
+ * $templateCache.get('templateId.ejs')
  * ```
  *
  * See {@link ng.$cacheFactory $cacheFactory}.
@@ -8238,8 +8238,8 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
    *    - `controllerAs` – `{string=}` – identifier name for to reference the controller in the component's scope.
    *      If present, the controller will be published to scope under the `controllerAs` name.
    *      If not present, this will default to be `$ctrl`.
-   *    - `template` – `{string=|function()=}` – html template as a string or a function that
-   *      returns an html template as a string which should be used as the contents of this component.
+   *    - `template` – `{string=|function()=}` – ejs template as a string or a function that
+   *      returns an ejs template as a string which should be used as the contents of this component.
    *      Empty string by default.
    *
    *      If `template` is a function, then it is {@link auto.$injector#invoke injected} with
@@ -8248,7 +8248,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
    *      - `$element` - Current element
    *      - `$attrs` - Current attributes object for the element
    *
-   *    - `templateUrl` – `{string=|function()=}` – path or function that returns a path to an html
+   *    - `templateUrl` – `{string=|function()=}` – path or function that returns a path to an ejs
    *      template that should be used  as the contents of this component.
    *
    *      If `templateUrl` is a function, then it is {@link auto.$injector#invoke injected} with
@@ -8297,7 +8297,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
    *   });
    *
    *   myMod.component('myComp', {
-   *     templateUrl: 'views/my-comp.html',
+   *     templateUrl: 'views/my-comp.ejs',
    *     controller: 'MyCtrl',
    *     controllerAs: 'ctrl',
    *     bindings: {name: '@'}
@@ -8379,7 +8379,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
    * Retrieves or overrides the default regular expression that is used for whitelisting of safe
    * urls during a[href] sanitization.
    *
-   * The sanitization is a security measure aimed at preventing XSS attacks via html links.
+   * The sanitization is a security measure aimed at preventing XSS attacks via ejs links.
    *
    * Any url about to be assigned to a[href] via data-binding is first normalized and turned into
    * an absolute url. Afterwards, the url is matched against the `aHrefSanitizationWhitelist`
@@ -8409,7 +8409,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
    * Retrieves or overrides the default regular expression that is used for whitelisting of safe
    * urls during img[src] sanitization.
    *
-   * The sanitization is a security measure aimed at prevent XSS attacks via html links.
+   * The sanitization is a security measure aimed at prevent XSS attacks via ejs links.
    *
    * Any url about to be assigned to img[src] via data-binding is first normalized and turned into
    * an absolute url. Afterwards, the url is matched against the `imgSrcSanitizationWhitelist`
@@ -18865,7 +18865,7 @@ function $$SanitizeUriProvider() {
    * Retrieves or overrides the default regular expression that is used for whitelisting of safe
    * urls during a[href] sanitization.
    *
-   * The sanitization is a security measure aimed at prevent XSS attacks via html links.
+   * The sanitization is a security measure aimed at prevent XSS attacks via ejs links.
    *
    * Any url about to be assigned to a[href] via data-binding is first normalized and turned into
    * an absolute url. Afterwards, the url is matched against the `aHrefSanitizationWhitelist`
@@ -18890,7 +18890,7 @@ function $$SanitizeUriProvider() {
    * Retrieves or overrides the default regular expression that is used for whitelisting of safe
    * urls during img[src] sanitization.
    *
-   * The sanitization is a security measure aimed at prevent XSS attacks via html links.
+   * The sanitization is a security measure aimed at prevent XSS attacks via ejs links.
    *
    * Any url about to be assigned to img[src] via data-binding is first normalized and turned into
    * an absolute url. Afterwards, the url is matched against the `imgSrcSanitizationWhitelist`
@@ -18938,7 +18938,7 @@ function $$SanitizeUriProvider() {
 var $sceMinErr = minErr('$sce');
 
 var SCE_CONTEXTS = {
-  // HTML is used when there's HTML rendered (e.g. ng-bind-html, iframe srcdoc binding).
+  // HTML is used when there's HTML rendered (e.g. ng-bind-ejs, iframe srcdoc binding).
   HTML: 'html',
 
   // Style statements or stylesheets. Currently unused in AngularJS.
@@ -19243,7 +19243,7 @@ function $SceDelegateProvider() {
      * that require this security context.
      * For instance, marking a string as trusted for the `$sce.HTML` context will entirely bypass
      * the potential `$sanitize` call in corresponding `$sce.HTML` bindings or directives, such as
-     * `ng-bind-html`. Note that in most cases you won't need to call this function: if you have the
+     * `ng-bind-ejs`. Note that in most cases you won't need to call this function: if you have the
      * sanitizer loaded, passing the value itself will render all the HTML that does not pose a
      * security risk.
      *
@@ -19736,7 +19736,7 @@ function $SceProvider() {
     if (enabled && msie < 8) {
       throw $sceMinErr('iequirks',
         'Strict Contextual Escaping does not support Internet Explorer version < 11 in quirks ' +
-        'mode.  You can fix this by adding the text <!doctype html> to the top of your HTML ' +
+        'mode.  You can fix this by adding the text <!doctype ejs> to the top of your HTML ' +
         'document.  See http://docs.angularjs.org/api/ng.$sce for more information.');
     }
 
@@ -19803,7 +19803,7 @@ function $SceProvider() {
      * Delegates to {@link ng.$sceDelegate#trustAs `$sceDelegate.trustAs`}. As such, returns a
      * wrapped object that represents your value, and the trust you have in its safety for the given
      * context. AngularJS can then use that value as-is in bindings of the specified secure context.
-     * This is used in bindings for `ng-bind-html`, `ng-include`, and most `src` attribute
+     * This is used in bindings for `ng-bind-ejs`, `ng-include`, and most `src` attribute
      * interpolations. See {@link ng.$sce $sce} for strict contextual escaping.
      *
      * @param {string} type The context in which this value is safe for use, e.g. `$sce.URL`,
@@ -19824,7 +19824,7 @@ function $SceProvider() {
      *
      * @param {*} value The value to mark as trusted for `$sce.HTML` context.
      * @return {*} A wrapped version of value that can be used as a trusted variant of your `value`
-     *     in `$sce.HTML` context (like `ng-bind-html`).
+     *     in `$sce.HTML` context (like `ng-bind-ejs`).
      */
 
     /**
@@ -22703,7 +22703,7 @@ function ngDirective(directive) {
  * @restrict E
  *
  * @description
- * Modifies the default behavior of the html a tag so that the default action is prevented when
+ * Modifies the default behavior of the ejs a tag so that the default action is prevented when
  * the href attribute is empty.
  *
  * For dynamically creating `href` attributes for a tags, see the {@link ng.ngHref `ngHref`} directive.
@@ -22842,12 +22842,12 @@ var htmlAnchorDirective = valueFn({
  * `{{hash}}`. The `ngSrc` directive solves this problem.
  *
  * The buggy way to write it:
- * ```html
+ * ```ejs
  * <img src="http://www.gravatar.com/avatar/{{hash}}" alt="Description"/>
  * ```
  *
  * The correct way to write it:
- * ```html
+ * ```ejs
  * <img ng-src="http://www.gravatar.com/avatar/{{hash}}" alt="Description" />
  * ```
  *
@@ -22868,12 +22868,12 @@ var htmlAnchorDirective = valueFn({
  * `{{hash}}`. The `ngSrcset` directive solves this problem.
  *
  * The buggy way to write it:
- * ```html
+ * ```ejs
  * <img srcset="http://www.gravatar.com/avatar/{{hash}} 2x" alt="Description"/>
  * ```
  *
  * The correct way to write it:
- * ```html
+ * ```ejs
  * <img ng-srcset="http://www.gravatar.com/avatar/{{hash}} 2x" alt="Description" />
  * ```
  *
@@ -28129,7 +28129,7 @@ var ngIncludeDirective = ['$templateRequest', '$anchorScroll', '$animate',
               ctrl.template = response;
 
               // Note: This will also link all children of ng-include that were contained in the original
-              // html. If that content contains controllers, ... they could pollute/change the scope.
+              // ejs. If that content contains controllers, ... they could pollute/change the scope.
               // However, using ng-include on an element with additional content does not make sense...
               // Note: We can't remove them in the cloneAttchFn of $transclude as that
               // function is called before linking the content, which would apply child

@@ -8,6 +8,7 @@
   "dependencies": {
     "@angular/cdk": "^5.0.0-rc0",
     "@angular/material": "^5.0.0-rc0",
+    "angular-material-time-picker": "^1.0.7",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",

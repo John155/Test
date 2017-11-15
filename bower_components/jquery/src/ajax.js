@@ -322,7 +322,7 @@ jQuery.extend( {
 		accepts: {
 			"*": allTypes,
 			text: "text/plain",
-			html: "text/html",
+			html: "text/ejs",
 			xml: "application/xml, text/xml",
 			json: "application/json, text/javascript"
 		},
@@ -346,7 +346,7 @@ jQuery.extend( {
 			// Convert anything to text
 			"* text": String,
 
-			// Text to html (true = no transformation)
+			// Text to ejs (true = no transformation)
 			"text html": true,
 
 			// Evaluate text as a json expression
