@@ -23,26 +23,25 @@
 
 </head>
 <body>
-<div ng-controller="AppCtrl" ng-cloak="" class="toolbardemoBasicUsage" ng-app="MyApp">
+<div ng-app="MyApp" ng-controller="AppCtrl">
+    <div ng-cloak="" class="toolbardemoBasicUsage">
+        <md-content>
 
-    <md-content>
-
-        <md-toolbar>
-            <div class="md-toolbar-tools">
-                <md-truncate style="position: absolute; left: 90px; right: 170px; top: 13px; bottom: 13px;">Kalender</md-truncate>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <md-truncate style="position: absolute; left: 90px; right: 170px; top: 13px; bottom: 13px;">Kalender</md-truncate>
 
                 <span flex=""></span>
                 <i class="material-icons">account_circle</i>
                 <md-button class="md-raised">
                     Anmelden
                 </md-button>
-                <md-button class="md-raised" aria-label="Anmelden">
+                <md-button class="md-raised" ng-click="editevent(event)" aria-label="Anmelden">
                     Registrieren
                 </md-button>
 
-            </div>
-        </md-toolbar>
-
+                </div>
+            </md-toolbar>
 
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -53,12 +52,21 @@
             </div>
         </md-toolbar>
 
-    </md-content>
+        </md-content>
+    </div>
+
+
+    <div ng-controller="DaysTest">
+
+        <table cellspacing="0">
+            <tr>
+                <td ng-repeat="x in names" class="mytable" > {{ x.Name }}</td>
+            </tr>
+        </table>
+
+    </div>
+
 </div>
 
-<!--
-Copyright 2016 Google Inc. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that can be foundin the LICENSE file at http://material.angularjs.org/HEAD/license.
--->
 </body>
 </html>
