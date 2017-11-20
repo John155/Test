@@ -10,6 +10,7 @@
     "@angular/material": "^5.0.0-rc0",
     "angular": "^1.6.6",
     "angular-material": "^1.1.5",
+    "angular-material-calendar": "^0.2.14",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",

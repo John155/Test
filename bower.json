@@ -18,6 +18,13 @@
     "bootstrap": "boostrap#^3.3.7",
     "masonry": "desandro/masonry#^4.2.0",
     "jquery": "^3.2.1",
-    "angular-bootstrap": "^2.5.0"
+    "angular-bootstrap": "^2.5.0",
+    "material-calendar": "^0.2.14"
   }
+
+
+  "dependencies": {
+    "material-calendar": "~0.2"
+  }
+
 }
