@@ -1,8 +1,11 @@
 
 var my = angular.module('myApp',['ngMaterial', 'ngMessages', 'material.svgAssetsCache','mwl.calendar', 'ngAnimate', 'ui.bootstrap', 'colorpicker.module']);
 
+
 my.controller('AppCtrl', function($scope, $mdDialog) {
-    $scope.editevent = function (ev) {
+
+/*
+    $scope.editevent = function () {
         $mdDialog.show({
             controller: DialogController,
             clickOutsideToClose:true,
@@ -10,7 +13,7 @@ my.controller('AppCtrl', function($scope, $mdDialog) {
 
         })
 
-        /*
+
         $mdDialog.alert()
             .parent(angular.element(document.querySelector('#popupContainer')))
             .clickOutsideToClose(true)
@@ -19,10 +22,12 @@ my.controller('AppCtrl', function($scope, $mdDialog) {
             .ariaLabel('ariaLabel')
             .ok('ok')
             .targetEvent(ev)
-        */
-        //);
-    };
 
+        );
+
+
+    };
+*/
     function DialogController($scope, $mdDialog) {
         $scope.hide = function() {
             $mdDialog.hide();
@@ -48,7 +53,7 @@ my.controller('DaysTest' ,function ($scope) {
     $scope.names = [{Name: 'Montag'}, {Name: 'Dienstag'}, {Name: 'Mittwoch'}, {Name: 'Donnerstag'}, {Name: 'Freitag'}, {Name: 'Samstag'}, {Name: 'Sonntag'}];
 });
 
-my.controller('DraggableExternalEventsCtrl', function(moment, calendarConfig) {
+my.controller('DraggableExternalEventsCtrl', function(moment, calendarConfig, $mdDialog) {
 
     var vm = this;
 
@@ -88,8 +93,31 @@ my.controller('DraggableExternalEventsCtrl', function(moment, calendarConfig) {
         vm.viewDate = start;
         vm.cellIsOpen = true;
     };
+
     vm.timespanClicked = function(date) {
         vm.lastDateClicked = date;
+        $mdDialog.show({
+            controller: DialogController,
+            clickOutsideToClose:true,
+            templateUrl: '../ejs/eventDialog.ejs'
+
+        });
+
+        function DialogController($scope, $mdDialog) {
+            $scope.hide = function() {
+                $mdDialog.hide();
+            };
+
+            $scope.cancel = function() {
+                $mdDialog.cancel();
+            };
+
+            $scope.answer = function(answer) {
+                $mdDialog.hide(answer);
+            };
+        }
+
+
     };
 
 });

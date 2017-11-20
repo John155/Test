@@ -40,6 +40,7 @@ angular
             }
             vm.viewDate = start;
             vm.cellIsOpen = true;
+
         };
 
     });

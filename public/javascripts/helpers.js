@@ -3,6 +3,7 @@ angular
     .factory('alert', function($uibModal) {
 
         function show(action, event) {
+
             return $uibModal.open({
                 templateUrl: 'modalContent.html',
                 controller: function() {
@@ -11,6 +12,7 @@ angular
                     vm.event = event;
                 },
                 controllerAs: 'vm'
+
             });
         }
 
