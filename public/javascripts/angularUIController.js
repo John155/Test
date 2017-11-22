@@ -115,7 +115,21 @@ my.controller('DraggableExternalEventsCtrl', function(moment, calendarConfig, $m
             $scope.answer = function(answer) {
                 $mdDialog.hide(answer);
             };
-        }
+            $scope.save = function(){
+                var data = $.param({
+                    termin: JSON.stringify({
+                        author: $scope.author,
+                        title : $scope.title,
+                        body : $scope.body
+                    })
+                });
+
+                $http.post("/api/book/", data).success(function(data, status) {
+                    console.log('Data posted successfully');
+                })
+            }
+
+            }
 
 
     };
