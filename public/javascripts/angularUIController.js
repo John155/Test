@@ -40,6 +40,28 @@ my.controller('AppCtrl', function($scope, $mdDialog) {
         $scope.answer = function(answer) {
             $mdDialog.hide(answer);
         };
+
+        $scope.save = function() {
+            $mdDialog.cancel();
+            /*
+            var data = $.param({
+                termin: JSON.stringify({
+                    name : $scope.name,
+                    ort :$scope.ort,
+                    start :$scope.start,
+                    ende :$scope.ende,
+                    benachrichtigungZeit :$scope.benachrichtigungZeit,
+                    benachrichtigungEinheit:$scope.benachrichtigungEinheit,
+                    beschreibung :$scope.beschreibung
+                })
+            });
+
+            $http.post("/api/book/", data).success(function(data, status) {
+                console.log('Data posted successfully');
+            })
+*/
+
+        };
     }
 });
 
