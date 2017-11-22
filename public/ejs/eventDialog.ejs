@@ -26,12 +26,12 @@
                 </p>
                 <label>
                     Termin Name
-                    <input type="text" name="eventName" >
+                    <input type="text" name="eventName" ng-model="name">
                 </label>
                 <br>
                 <label>
                     Ort
-                    <input type="text" name="eventOrt">
+                    <input type="text" name="eventOrt" ng-model="ort">
                 </label>
                 <br>
                 <label>
@@ -42,30 +42,46 @@
                     <input type="number" name="Minuten" min="00" max="55" value="0" step="5" size="2">
                     </input>
                     -->
-                    <input type="time" form="hh:mm">
+                    <input type="time" form="hh:mm" ng-model="start">
                 </label>
                 <br>
                 <label>
                     Ende
+                    <!--
                     <input type="number" name="Stunden" min="00" max="23" value="0" size="2">
                     :
                     <input type="number" name="Minuten" min="00" max="55" value="0" step="5" size="2">
+                    -->
+                    <input type="time" form="hh:mm" ng-model="ende">
                 </label>
                 <br>
                 <label>
                     Benachrichtigung
-                    <input type="number" name="Zeit" min="0" max="59" value="0" size="2">
-                    <select>
+                    <input placeholder="z.B.: 30" type="number" name="Zeit" min="0" value="0" size="2" ng-model="benachrichtigungZeit">
+                    <select ng-model="benachrichtigungEinheit">
                         <option value="minuten">Minute/n</option>
                         <option value="stunden">Stunde/n</option>
+                        <option value="tage">Tag/e</option>
                     </select>
                     vorher
                 </label>
                 <br>
                 <label>
                     Beschreibung
-                    <textarea rows="4" cols="50">
-                    </textarea>
+                    <textarea rows="4" cols="50" ng-model="beschreibung"></textarea>
+                </label>
+                <br>
+                <label>
+                    Zusammenfassung
+                    <br>
+                    {{name}}
+                    {{ort}}
+                    {{start}}
+                    {{ende}}
+                    {{benachrichtigungZeit}}
+                    {{benachrichtigungEinheit}}
+                    {{beschreibung}}
+
                 </label>
             </div>
         </md-dialog-content>
