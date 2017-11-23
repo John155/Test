@@ -1,86 +1,116 @@
 <md-dialog aria-label="Mango (Fruit)">
-    <form ng-cloak>
-        <md-toolbar>
-            <div class="md-toolbar-tools">
-                <md-button class="md-raised" ng-click="" aria-label="Speichern">
-                    Speichern
-                </md-button>
-                <span flex></span>
-                <md-button class="md-raised" ng-click="" aria-label="Löschen">
-                    Löschen
-                </md-button>
-                <md-button class="md-raised" ng-click="cancel()" aria-label="Abbrechen">
-                    Abbrechen
-                </md-button>
-                <md-button class="md-icon-button" ng-click="cancel()">
-                    <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
-                </md-button>
-            </div>
-        </md-toolbar>
+    <head>
 
-        <md-dialog-content>
-            <div class="md-dialog-content">
-                <h2>Using .md-dialog-content class that sets the padding as the spec</h2>
-                <p>
-                    The mango is a juicy stone fruit.
-                </p>
-                <label>
-                    Termin Name
-                    <input type="text" name="eventName" >
-                </label>
-                <br>
-                <label>
-                    Ort
-                    <input type="text" name="eventOrt">
-                </label>
-                <br>
-                <label>
-                    Start
-                    <!--
-                    <input type="number" name="Stunden" min="00" max="23" value="0" size="2">
-                    :
-                    <input type="number" name="Minuten" min="00" max="55" value="0" step="5" size="2">
-                    </input>
-                    -->
-                    <input type="time" form="hh:mm">
-                </label>
-                <br>
-                <label>
-                    Ende
-                    <input type="number" name="Stunden" min="00" max="23" value="0" size="2">
-                    :
-                    <input type="number" name="Minuten" min="00" max="55" value="0" step="5" size="2">
-                </label>
-                <br>
-                <label>
-                    Benachrichtigung
-                    <input type="number" name="Zeit" min="0" max="59" value="0" size="2">
-                    <select>
-                        <option value="minuten">Minute/n</option>
-                        <option value="stunden">Stunde/n</option>
-                    </select>
-                    vorher
-                </label>
-                <br>
-                <label>
-                    Beschreibung
-                    <textarea rows="4" cols="50">
-                    </textarea>
-                </label>
-            </div>
-        </md-dialog-content>
+        <script src="https://unpkg.com/moment@2.17.1"></script>
+        <script src="https://unpkg.com/interactjs@1"></script>
+        <script src="https://unpkg.com/angular@1.6.4/angular.js"></script>
+        <script src="https://unpkg.com/angular-animate@1.6.4/angular-animate.js"></script>
+        <script src="https://unpkg.com/angular-ui-bootstrap@2/dist/ui-bootstrap-tpls.js"></script>
+        <script src="https://unpkg.com/rrule@2"></script>
+        <script src="https://unpkg.com/angular-bootstrap-colorpicker@3"></script>
+        <script src="https://unpkg.com/angular-bootstrap-calendar"></script>
+        <link href="https://unpkg.com/bootstrap@3/dist/css/bootstrap.css" rel="stylesheet">
+        <link href="https://unpkg.com/angular-bootstrap-colorpicker@3/css/colorpicker.min.css" rel="stylesheet">
+        <link href="https://unpkg.com/angular-bootstrap-calendar/dist/css/angular-bootstrap-calendar.min.css" rel="stylesheet">
 
-        <md-dialog-actions layout="row">
-            <md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>
-                More on Wikipedia
-            </md-button>
-            <span flex></span>
-            <md-button ng-click="answer('not useful')">
-                Not Useful
-            </md-button>
-            <md-button ng-click="answer('useful')">
-                Useful
-            </md-button>
-        </md-dialog-actions>
-    </form>
+
+        <script src="/javascripts/angularUIController.js"></script>
+    </head>
+
+
+    <div ng-controller="DraggableExternalEventsCtrl as vm">
+
+
+        <form ng-cloak>
+            <!--<md-toolbar>
+                <div class="md-toolbar-tools">
+
+                    <button class="btn btn-primary pull-right" ng-click="vm.addEvent()">
+                        add
+                    </button>
+                    <span flex></span>
+                    <md-button class="md-raised" ng-click="vm.save(eve)">
+                        save
+                    </md-button>
+                    <md-button class="md-raised" ng-click="hide()">
+                        Abbrechen
+                    </md-button>
+                    <md-button class="md-icon-button" ng-click="cancel()">
+                        <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>-->
+
+
+
+            <md-dialog-content >
+                <div class="md-dialog-content">
+                    <h2>Termin erstellen</h2>
+                    <label ng-model="vm.calendarView" >
+                        Titel
+                        <input type="text" class="form-control" ng-model="eve.title">
+                    </label>
+                    <br>
+                    <label>
+                        Ort
+                        <input type="text" class="form-control" ng-model="eve.location">
+                    </label>
+                    <label>
+                        Hauptfarbe
+                        <input class="form-control" colorpicker type="text" ng-model="eve.color.primary">
+                    </label>
+
+                    <label>
+                        Zweitfarbe
+                        <input class="form-control" colorpicker type="text" ng-model="eve.color.secondary">
+                    </label>
+
+
+                    <br>
+                    <label>
+                        Start
+                        <p class="input-group" style="max-width: 250px">
+                            <input type="text" class="form-control" readonly uib-datepicker-popup="dd MMMM yyyy" ng-model="eve.startsAt" is-open="eve.startOpen" close-text="Close" >
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="vm.toggle($event, 'startOpen', eve)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                                </button>
+                            </span>
+                        <div uib-timepicker ng-model="eve.startsAt" hour-step="1" minute-step="15" show-meridian="true"></div>
+                        </p>
+
+                    </label>
+                    <br>
+                    <label>
+                        Ende
+                        <p class="input-group" style="max-width: 250px">
+                            <input type="text" class="form-control" readonly uib-datepicker-popup="dd MMMM yyyy" ng-model="eve.endsAt" is-open="eve.endOpen" close-text="Close">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="vm.toggle($event, 'endOpen', eve)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                                </button>
+                            </span>
+                        </p>
+                        <div uib-timepicker ng-model="eve.endsAt" hour-step="1" minute-step="15" show-meridian="true"></div>
+                    </label>
+                    <br>
+                    <label>
+                        Benachrichtigung
+                        <input type="number" name="Zeit" min="0" max="59" value="0" size="2" ng-model="eve.alerttime">
+                        <select>
+                            <option value="minuten">Minute/n</option>
+                            <option value="stunden">Stunde/n</option>
+                        </select>
+                        vorher
+                    </label>
+                    <br>
+                    <label>
+                        Beschreibung
+                        <textarea rows="4" cols="50" ng-model="eve.description">
+                        </textarea>
+                    </label>
+                </div>
+            </md-dialog-content>
+        </form>
+    </div>
 </md-dialog>

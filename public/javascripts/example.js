@@ -1,32 +1,31 @@
+
+/*
 angular.module('myCalendar', ['mwl.calendar', 'ngAnimate', 'ui.bootstrap', 'colorpicker.module']);
 angular
     .module('myCalendar')
-    .controller('DraggableExternalEventsCtrl', function(moment, calendarConfig) {
+    .controller('DraggableExternalEventsCtrl', function(moment, alert, calendarConfig) {
 
         var vm = this;
 
         vm.events = [];
 
-        vm.externalEvents = [
-            {
-                title: 'Event 1',
-                type: 'warning',
-                color: calendarConfig.colorTypes.warning,
-                startsAt: moment().startOf('month').toDate(),
-                draggable: true
-            },
-            {
-                title: 'Event 2',
-                type: 'danger',
-                color: calendarConfig.colorTypes.important,
-                startsAt: moment().startOf('month').toDate(),
-                draggable: true
-            }
-        ];
+        vm.externalEvents = [];
+
 
         vm.calendarView = 'month';
         vm.viewDate = moment().startOf('month').toDate();
-        vm.cellIsOpen = false;
+        vm.cellIsOpen = true;
+
+        vm.addEvent = function() {
+             vm.events.push({
+             title: 'New event',
+             location: 'Ort',
+             startsAt: moment().startOf('day').toDate(),
+             endsAt: moment().endOf('day').toDate(),
+             draggable: true,
+             resizable: true
+        });
+        };
 
         vm.eventDropped = function(event, start, end) {
             var externalIndex = vm.externalEvents.indexOf(event);
@@ -44,3 +43,4 @@ angular
         };
 
     });
+*/
