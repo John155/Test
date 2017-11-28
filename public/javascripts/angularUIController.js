@@ -75,7 +75,7 @@ my.controller('DaysTest' ,function ($scope) {
     $scope.names = [{Name: 'Montag'}, {Name: 'Dienstag'}, {Name: 'Mittwoch'}, {Name: 'Donnerstag'}, {Name: 'Freitag'}, {Name: 'Samstag'}, {Name: 'Sonntag'}];
 });
 
-my.controller('DraggableExternalEventsCtrl', function(moment, calendarConfig, $mdDialog) {
+my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarConfig, $mdDialog) {
 
     var vm = this;
 
@@ -125,33 +125,37 @@ my.controller('DraggableExternalEventsCtrl', function(moment, calendarConfig, $m
 
         });
 
-        function DialogController($scope, $mdDialog) {
-            $scope.hide = function() {
-                $mdDialog.hide();
-            };
+    function DialogController($scope, $mdDialog,$http ) {
+        $scope.hide = function() {
+            $mdDialog.hide();
+        };
 
-            $scope.cancel = function() {
-                $mdDialog.cancel();
-            };
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
 
-            $scope.answer = function(answer) {
-                $mdDialog.hide(answer);
-            };
-            $scope.save = function(){
-                var data = $.param({
-                    termin: JSON.stringify({
-                        author: $scope.author,
-                        title : $scope.title,
-                        body : $scope.body
-                    })
-                });
+        $scope.answer = function(answer) {
+            $mdDialog.hide(answer);
+        };
+        $scope.save = function(){
+            $mdDialog.cancel();
+            var data = {
+                name: $scope.name,
+                ort : $scope.ort,
+                start : $scope.start,
+                ende : $scope.ende,
+                benachrichtigungZeit : $scope.benachrichtigungZeit,
+                benachrichtigungEinheit : $scope.benachrichtigungEinheit,
+                beschreibung : $scope.beschreibung
+                };
+            console.log($scope.name);
+            $http.post("/",  JSON.stringify(data)).success(function(data, status) {
+                console.log('Data posted successfully');
+            })
 
-                $http.post("/api/book/", data).success(function(data, status) {
-                    console.log('Data posted successfully');
-                })
-            }
+        }
 
-            }
+        }
 
 
     };
