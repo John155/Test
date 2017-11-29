@@ -1,28 +1,22 @@
-<md-dialog aria-label="Mango (Fruit)">
-
-
-
-        <form ng-cloak>
-            <<md-toolbar>
+<md-dialog>
+        <form ng-cloak="">
+            <md-toolbar>
                 <div class="md-toolbar-tools">
-
-                    <button class="btn btn-primary pull-right" ng-click="">
-                        add
-                    </button>
                     <span flex></span>
+                    <md-button class="md-raised" ng-click="delete(eve)">
+                        Delete
+                    </md-button>
                     <md-button class="md-raised" ng-click="save()">
-                        save
+                        Save
                     </md-button>
-                    <md-button class="md-raised" ng-click="hide()">
-                        Abbrechen
+                    <md-button class="md-raised" ng-click="cancel()">
+                        Cancel
                     </md-button>
-                    <md-button class="md-icon-button" ng-click="cancel()">
+                    <!--<md-button class="md-icon-button" ng-click="cancel()">
                         <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
-                    </md-button>
+                    </md-button>-->
                 </div>
             </md-toolbar>
-
-
 
             <md-dialog-content >
                 <div class="md-dialog-content">
@@ -53,7 +47,7 @@
                         <p class="input-group" style="max-width: 250px">
                             <input type="text" class="form-control" readonly uib-datepicker-popup="dd MMMM yyyy" ng-model="eve.startsAt" is-open="eve.startOpen" close-text="Close" >
                             <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="vm.toggle($event, 'startOpen', eve)">
+                                <button type="button" class="btn btn-default" ng-click="date($event, 'startOpen', eve)">
                                 <i class="glyphicon glyphicon-calendar"></i>
                                 </button>
                             </span>
@@ -67,7 +61,7 @@
                         <p class="input-group" style="max-width: 250px">
                             <input type="text" class="form-control" readonly uib-datepicker-popup="dd MMMM yyyy" ng-model="eve.endsAt" is-open="eve.endOpen" close-text="Close">
                             <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="vm.toggle($event, 'endOpen', eve)">
+                                <button type="button" class="btn btn-default" ng-click="date($event, 'endOpen', eve)">
                                 <i class="glyphicon glyphicon-calendar"></i>
                                 </button>
                             </span>
@@ -77,7 +71,7 @@
                     <br>
                     <label>
                         Benachrichtigung
-                        <input type="number" name="Zeit" min="0" max="59" value="0" size="2" ng-model="eve.alerttime">
+                        <input type="number" name="Zeit" min="0" max="59" value="0" size="2" ng-model="alerttime">
                         <select>
                             <option value="minuten">Minute/n</option>
                             <option value="stunden">Stunde/n</option>
