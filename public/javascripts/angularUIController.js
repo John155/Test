@@ -138,72 +138,69 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
         if (vm.calendarView === 'month') {
             if ((vm.cellIsOpen && moment(date).startOf('day').isSame(moment(vm.viewDate).startOf('day'))) || cell.events.length === 0 || !cell.inMonth) {
                 vm.cellIsOpen = false;
-                vm.timespanClicked = function(date) {
+                vm.timespanClicked = function (date) {
                     vm.lastDateClicked = date;
-
-
 
 
                     //show eigen angefertigten dialog anzeigen
                     $mdDialog.show({
                         controller: DialogController,
-                        clickOutsideToClose:true,
+                        clickOutsideToClose: true,
                         templateUrl: '../ejs/eventDialog.ejs'
                     });
-                    function DialogController($scope, $mdDialog)  {
 
-                        vm.addEvent();
-                        $scope.eve = vm.events.get(vm.events.length);
-                        vm.events.get(vm.events.length).date = vm.lastDateClicked;
+                    function DialogController($scope, $mdDialog, $http) {
 
-                        $scope.hide = function() {
-                        $mdDialog.hide();
+
+                        $scope.hide = function () {
+                            $mdDialog.hide();
                         };
 
-        $scope.cancel = function() {
-            $mdDialog.cancel();
-        };
+                        $scope.cancel = function () {
+                            $mdDialog.cancel();
+                        };
 
-        $scope.answer = function(answer) {
-            $mdDialog.hide(answer);
-        };
-        $scope.save = function(){
-            $mdDialog.cancel();
-            var data = {
-                name: $scope.name,
-                ort : $scope.ort,
-                start : $scope.start,
-                ende : $scope.ende,
-                benachrichtigungZeit : $scope.benachrichtigungZeit,
-                benachrichtigungEinheit : $scope.benachrichtigungEinheit,
-                beschreibung : $scope.beschreibung
-                };
-            console.log($scope.name);
-            $http.post("/",  JSON.stringify(data)).success(function(data, status) {
-                console.log('Data posted successfully');
-            })
+                        $scope.answer = function (answer) {
+                            $mdDialog.hide(answer);
+                        };
 
-        }
+                        $scope.save = function () {
 
-        }
+                            vm.events.push({
+                                date: vm.lastDateClicked,
+                                title: $scope.title,
+                                location: $scope.location,
+                                description: $scope.description,
+                                alerttime: 0,
+                                startsAt: vm.lastDateClicked,
+                                endsAt: vm.lastDateClicked,
+                                color: calendarConfig.colorTypes.important,
+                                draggable: false,
+                                resizable: false
+                            });
 
+                            var data = {
+                                title: $scope.title,
+                                location: $scope.location,
+                                start: $scope.start,
+                                ende: $scope.ende,
+                                benachrichtigungZeit: $scope.benachrichtigungZeit,
+                                benachrichtigungEinheit: $scope.benachrichtigungEinheit,
+                                beschreibung: $scope.beschreibung
+                            };
+                            console.log($scope.name);
+                            $http.post("/", JSON.stringify(data)).success(function (data, status) {
+                                console.log('Data posted successfully');
+                            })
 
+                            $mdDialog.cancel();
 
+                        }
 
-            } else {
-                vm.cellIsOpen = true;
-                vm.viewDate = date;
+                    }
+                }
             }
-        } else if (vm.calendarView === 'year') {
-            if ((vm.cellIsOpen && moment(date).startOf('month').isSame(moment(vm.viewDate).startOf('month'))) || cell.events.length === 0) {
-                vm.cellIsOpen = false;
-            } else {
-                vm.cellIsOpen = true;
-                vm.viewDate = date;
-            }
         }
 
-    };
-
-
+    }
 });
