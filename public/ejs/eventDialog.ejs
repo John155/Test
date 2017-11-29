@@ -32,18 +32,30 @@
                     </label>
                     <label>
                         Hauptfarbe
-                        <input class="form-control" colorpicker type="text" ng-model="eve.color.primary">
+                        <input class="form-control" colorpicker type="text" ng-model="color.primary">
                     </label>
 
                     <label>
                         Zweitfarbe
-                        <input class="form-control" colorpicker type="text" ng-model="eve.color.secondary">
+                        <input class="form-control" colorpicker type="text" ng-model="color.secondary">
                     </label>
 
 
                     <br>
-                    <label>
-                        Start
+                    Start
+                    <br>
+                    <md-datepicker ng-model="StartDate" md-placeholder="Enter date"></md-datepicker> <label>
+                        Start Uhrzeit
+                        <input type="time" ng-model="StartTime"></label>
+                    <br>
+                    Ende
+                    <br>
+                    <md-datepicker ng-model="EndeDate" md-placeholder="Enter date"></md-datepicker> <label>
+                        Ende Uhrzeit
+                        <input type="time" ng-model="EndeTime"> </label>
+                    <br>
+
+                        <!--<label>
                         <p class="input-group" style="max-width: 250px">
                             <input type="text" class="form-control" readonly uib-datepicker-popup="dd MMMM yyyy" ng-model="eve.startsAt" is-open="eve.startOpen" close-text="Close" >
                             <span class="input-group-btn">
@@ -67,7 +79,7 @@
                             </span>
                         </p>
                         <div uib-timepicker ng-model="eve.endsAt" hour-step="1" minute-step="15" show-meridian="true"></div>
-                    </label>
+                    </label>-->
                     <br>
                     <label>
                         Benachrichtigung
