@@ -2,7 +2,7 @@
 <html>
 <head>
 
-    <title>Bootstrap Example</title>
+    <title>Kalendere</title>
     <meta charset="utf-8">
 
 
@@ -35,31 +35,32 @@
     <script src="/javascripts/example.js"></script>
     <script src="/javascripts/helpers.js"></script>
     <link href="/stylesheets/style.css" rel="stylesheet" >
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+
 </head>
 <body>
 
 <div ng-app="myApp">
-    <div ng-controller="AppCtrl" ng-cloak="" class="toolbardemoBasicUsage">
+    <div ng-controller="AppCtrl as ac" ng-cloak="" class="toolbardemoBasicUsage">
 
         <md-content>
 
             <md-toolbar>
-                <div class="md-toolbar-tools">
-                    <md-truncate style="position: absolute; left: 90px; right: 170px; top: 13px; bottom: 13px;">Kalender</md-truncate>
+                    <div class="md-toolbar-tools">
+                        <md-truncate style="position: absolute; left: 90px; right: 170px; top: 13px; bottom: 13px;">Kalender</md-truncate>
 
-                    <span flex=""></span>
-                    <i class="material-icons">account_circle</i>
-                    <md-button class="md-raised">
-                        Anmelden
-                    </md-button>
-                    <md-button class="md-raised" ng-click="editevent(event)">
-                        Registrieren
-                    </md-button>
-
-                </div>
+                        <span flex=""></span>
+                        <i class="material-icons">account_circle</i>
+                        <md-button class="md-raised" ng-click="">
+                            Anmelden
+                        </md-button>
+                        <md-button class="md-raised" ng-click="">
+                            Registrieren
+                        </md-button>
+                    </div>
             </md-toolbar>
-
-
+            
             <!--<md-toolbar>
                 <div class="md-toolbar-tools">
                     <div ng-controller="cltmy">

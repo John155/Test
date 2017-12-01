@@ -2,32 +2,8 @@
 var my = angular.module('myApp',['ngMaterial', 'ngMessages', 'material.svgAssetsCache','mwl.calendar', 'ngAnimate', 'ui.bootstrap', 'colorpicker.module']);
 
 
+
 my.controller('AppCtrl', function($scope, $mdDialog) {
-
-/*
-    $scope.editevent = function () {
-        $mdDialog.show({
-            controller: DialogController,
-            clickOutsideToClose:true,
-            templateUrl: '../ejs/eventDialog.ejs'
-
-        })
-
-
-        $mdDialog.alert()
-            .parent(angular.element(document.querySelector('#popupContainer')))
-            .clickOutsideToClose(true)
-            .title('Title')
-            .textContent('TextContent')
-            .ariaLabel('ariaLabel')
-            .ok('ok')
-            .targetEvent(ev)
-
-        );
-
-
-    };
-*/
 
 });
 
@@ -40,26 +16,29 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
 
     var vm = this;
     var counter = 0;
-
     //These variables MUST be set as a minimum for the calendar to work
     vm.calendarView = 'month';
     vm.viewDate = new Date();
+
+
     var actions = [{
         label: '<i class=\'glyphicon glyphicon-pencil\'></i>',
         onClick: function(args) {
+            //edit event
+            vm.eventClicked(args.calendarEvent);
             alert.show('Edited', args.calendarEvent);
         }
     }, {
         label: '<i class=\'glyphicon glyphicon-remove\'></i>',
         onClick: function(args) {
+            vm.cellIsOpen = false;
             alert.show('Deleted', args.calendarEvent);
         }
     }];
 
     vm.events = [];
 
-
-    vm.cellIsOpen = true;
+    vm.cellIsOpen = false;
 
     vm.addEvent = function() {
         vm.events.push({
@@ -75,7 +54,6 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
             resizable: false
         });
     };
-
 
 
     vm.eventClicked = function(event) {
@@ -147,10 +125,18 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
 
     vm.timespanClicked = function(date, cell) {
 
+
         if (vm.calendarView === 'month') {
             if ((vm.cellIsOpen && moment(date).startOf('day').isSame(moment(vm.viewDate).startOf('day'))) || cell.events.length === 0 || !cell.inMonth) {
                 vm.cellIsOpen = false;
-                vm.timespanClicked = function (date) {
+            } else {
+                vm.cellIsOpen = true;
+                vm.viewDate = date;
+            }
+
+            if(vm.calendarView === 'month') {
+                if (!vm.cellIsOpen) {
+                    vm.cellIsOpen = false;
                     vm.lastDateClicked = date;
 
                     //show eigen angefertigten dialog anzeigen
@@ -162,10 +148,15 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
 
                     function DialogController($scope, $mdDialog, $http) {
 
+                        var farbe = {
+                            primary: "#f01010",
+                            secondary: "#ffffff"
+                        };
+
                         var tempt = {
                             startsAt: vm.lastDateClicked,
                             endsAt: vm.lastDateClicked,
-                            color: calendarConfig.colorTypes.important
+                            color:  farbe
                         };
 
                         $scope.eve = tempt;
@@ -185,6 +176,7 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
 
                         $scope.save = function () {
 
+
                             vm.events.push({
                                 index: counter,
                                 date: vm.lastDateClicked,
@@ -196,10 +188,10 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                                 endsAt: tempt.endsAt,
                                 color: tempt.color,
                                 draggable: false,
-                                resizable: false
+                                resizable: false,
+                                actions: actions
                             });
 
-                            console.log(tempt.startsAt.getTime());
 
                             var data = {
                                 title: $scope.title,
@@ -218,11 +210,10 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                             $mdDialog.cancel();
 
                         }
-
                     }
                 }
+
             }
         }
-
     }
 });
