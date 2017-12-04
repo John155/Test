@@ -31,21 +31,30 @@ router.post('/login', function(req, res) {
         console.log("myCallback");
         console.log("myCAllback -----> " + data);
 
-        const payload = {
-            name: data[0].name,
-            userid: data[0].id
-        };
-        var token = jwt.sign(payload, database.superSecret, {
-            //expiresInMinutes: 1440 // expires in 24 hours
-        });
 
-        console.log(token);
-        res.json({
-            success: true,
-            message: 'Hallo, ' + data[0].name,
-            userid: data[0].id,
-            token: token
-        });
+        if (data[0] == null){
+            console.log("passwort falsch");
+            res.json({
+                success: false,
+                message: 'Username oder Passwort falsch'
+            });
+        } else {
+            const payload = {
+                name: data[0].name,
+                userid: data[0].id
+            };
+            var token = jwt.sign(payload, database.superSecret, {
+                //expiresInMinutes: 1440 // expires in 24 hours
+            });
+
+            console.log(token);
+            res.json({
+                success: true,
+                message: 'Hallo, ' + data[0].name,
+                userid: data[0].id,
+                token: token
+            });
+        }
     };
 });
 

@@ -46,7 +46,7 @@ var createUser = function(name ,password , isAdmin) {
 var checkUser = function (name, password, call) {
     console.log("checkUser...");
     //var sql = "SELECT * FROM users WHERE name = '" + name + "' and password = '" + password + "'";
-    var sql = "SELECT * FROM users WHERE name = '" + "user2" + "' and password = '" + "pass2" + "'";
+    var sql = "SELECT * FROM users WHERE name = '" + "user2" + "' and password = '" + "pass5" + "'";
     //console.log(sql);
     connection.query(sql, function (err, result) {
         if (err) throw err;
