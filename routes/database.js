@@ -16,21 +16,6 @@ connection.connect(function(err) {
     console.log("Database Connected!");
 });
 
-var saveToDatabase = function(terminname,ort,start,ende,benachrichtigung,benachrichtigungseinheit,beschreibung,userid) {
-
-    //var start1 = "9999-12-31 23:59:59";
-    //var ende1 = "9999-12-31 23:59:59";
-
-    var sql = "INSERT INTO termine (userid,terminname,ort,start,ende,benachrichtigung,benachrichtigungseinheit,beschreibung)" +
-        " VALUES ('" + userid +"','" + terminname + "','"+ ort + "','"+start1+"','"+ ende1 + "','"+ benachrichtigung + "','"+benachrichtigungseinheit+"','"+beschreibung+"')";
-    connection.query(sql, function (err, result) {
-        if (err) throw err;
-        console.log("1 record inserted");
-    });
-};
-
-
-
 
 var createUser = function(name ,password , isAdmin) {
 
@@ -58,17 +43,36 @@ var checkUser = function (name, password, call) {
 exports.superSecret = 'ilovescotchyscotch';
 
 
+
+
+var saveToDatabase = function(terminname,ort,start,ende,benachrichtigungZeit,benachrichtigungseinheit,beschreibung, ersteFarbe, zweiteFarbe ,userid) {
+
+    //var start1 = "9999-12-31 23:59:59";
+    //var ende1 = "9999-12-31 23:59:59";
+
+    var sql = "INSERT INTO termine (userid,terminname,ort,start,ende,benachrichtigungZeit,benachrichtigungseinheit,beschreibung,ersteFarbe,zweiteFarbe)" +
+        " VALUES ('" + userid +"','" + terminname + "','"+ ort + "','"+start+"','"+ ende + "','"+ benachrichtigungZeit +"','"+benachrichtigungseinheit+"','"+beschreibung+"','"+ersteFarbe+"','"+zweiteFarbe+"')";
+    console.log(sql);
+    connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("1 record inserted");
+    });
+};
+var readeDatabaseTermine = function(userid, call) {
+
+    //var start1 = "9999-12-31 23:59:59";
+    //var ende1 = "9999-12-31 23:59:59";
+
+    var sql = "SELECT * FROM termine WHERE userid = 1";
+    connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("1 record inserted");
+        console.log("databaseJs Termine-------> " + result);
+        call(result);
+    });
+};
+
 exports.checkUser = checkUser;
 exports.createUser = createUser;
 exports.saveToDatabase = saveToDatabase;
-
-/*
-// set up a mongoose model and pass it using module.exports
-usermysql.user = new Schema({
-    name: String,
-    password: String,
-    admin: Boolean
-});
-
-module.exports = usermysql.model('User', usermysql.user);
-*/
+exports.readeDatabaseTermine = readeDatabaseTermine;
