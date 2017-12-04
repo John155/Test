@@ -7,9 +7,47 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-var database = require('./routes/databasefile.js');
+var database = require('./routes/database.js');
 
 var app = express();
+
+
+//Userverwaltung
+var morgan = require('morgan');
+var usersmysql = require('mysql');
+
+var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
+//var userconfig = require('./database.js'); // get our config file
+//var User   = require('./app/models/user'); // get our mysql model
+
+app.set('superSecret', database.secret);
+
+//SampleUser
+
+    // create a sample user
+    /*var nick = new usersmysql.user({
+        name: 'Nick Cerminara',
+        password: 'password',
+        admin: true
+    });
+
+
+    // save the sample user
+    nick.save(function(err) {
+        if (err) throw err;
+
+        console.log('User saved successfully');
+        res.json({ success: true });
+    });
+    */
+
+
+
+
+
+
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

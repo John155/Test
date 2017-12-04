@@ -1,0 +1,33 @@
+<md-dialog>
+    <form ng-cloak="">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <span flex></span>
+                <md-button class="md-raised" ng-click="registrieren()">
+                    Registrieren
+                </md-button>
+                <md-button class="md-raised" ng-click="cancel()">
+                    Cancel
+                </md-button>
+                <!--<md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+                </md-button>-->
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content >
+            <div class="md-dialog-content">
+                <h2>Registrieren</h2>
+                <label>
+                    E-Mail
+                    <input type="text" ng-model="email">
+                </label>
+                <br>
+                <label>
+                    Password
+                    <input type="password" ng-model="password">
+                </label>
+            </div>
+        </md-dialog-content>
+
+    </form>

@@ -4,31 +4,61 @@ var my = angular.module('myApp',['ngMaterial', 'ngMessages', 'material.svgAssets
 
 my.controller('AppCtrl', function($scope, $mdDialog) {
 
-/*
-    $scope.editevent = function () {
+    $scope.registrierenDialog = function () {
         $mdDialog.show({
-            controller: DialogController,
-            clickOutsideToClose:true,
-            templateUrl: '../ejs/eventDialog.ejs'
+            controller: RegistrierenController,
+            clickOutsideToClose: true,
+            templateUrl: '../ejs/registrieren.ejs'
+        });
 
-        })
+        function RegistrierenController($scope, $mdDialog, $http) {
 
+            $scope.registrieren = function () {
+                var data = {
+                    email: $scope.email,
+                    password: $scope.password
+                };
+                console.log($scope.email);
+                $http.post("/registrieren", JSON.stringify(data)).success(function (data, status) {
+                    console.log('Data posted successfully');
+                });
+                $mdDialog.cancel();
+            };
 
-        $mdDialog.alert()
-            .parent(angular.element(document.querySelector('#popupContainer')))
-            .clickOutsideToClose(true)
-            .title('Title')
-            .textContent('TextContent')
-            .ariaLabel('ariaLabel')
-            .ok('ok')
-            .targetEvent(ev)
+            $scope.cancel = function () {
+                $mdDialog.cancel();
+            };
 
-        );
+        };
+    }
 
+    $scope.loginDialog = function () {
+        $mdDialog.show({
+            controller: LoginController,
+            clickOutsideToClose: true,
+            templateUrl: '../ejs/login.ejs'
+        });
 
-    };
-*/
+        function LoginController($scope, $mdDialog, $http) {
 
+            $scope.login = function () {
+                var data = {
+                    email: $scope.email,
+                    password: $scope.password
+                };
+                console.log($scope.email);
+                $http.post("/login", JSON.stringify(data)).success(function (data, status) {
+                    console.log('Data posted successfully');
+                });
+                $mdDialog.cancel();
+            };
+
+            $scope.cancel = function () {
+                $mdDialog.cancel();
+            };
+
+        };
+    }
 });
 
 
@@ -226,3 +256,59 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
 
     }
 });
+
+my.controller('LoginCtrl', function($scope, $mdDialog, $mdMedia, $mdToast) {
+    var lc = this;
+    this.$scope = $scope;
+    this.$mdDialog = $mdDialog;
+    this.$mdMedia = $mdMedia;
+    this.$mdToast = $mdToast;
+    this.status = '';
+
+
+    lc.prototype.showDialog = function (event) {
+        var _this = this;
+        this.$mdDialog.show({
+            controller: LoginDialogController,
+            controllerAs: 'dialog',
+            templateUrl: 'login-dialog.template.html',
+            parent: angular.element(document.body),
+            targetEvent: event,
+            clickOutsideToClose: true,
+        })
+            .then(function (credentials) {
+                return _this.showToast("Thanks for logging in, " + credentials.username + ".");
+            }, function () {
+                return _this.showToast('You canceled the login.');
+            });
+        this.$scope.$watch(function () {
+            return _this.$mdMedia('xs') || _this.$mdMedia('sm');
+        }, function (wantsFullScreen) {
+            return _this.customFullscreen = wantsFullScreen === true;
+        });
+    };
+    lc.prototype.showToast = function (content) {
+        this.$mdToast.show(this.$mdToast.simple()
+            .content(content)
+            .position('top right')
+            .hideDelay(3000));
+    };
+});
+
+
+var LoginDialogController = (function () {
+    function LoginDialogController($mdDialog) {
+        this.$mdDialog = $mdDialog;
+    }
+    LoginDialogController.prototype.hide = function () {
+        this.$mdDialog.hide();
+    };
+    LoginDialogController.prototype.close = function () {
+        this.$mdDialog.cancel();
+    };
+    LoginDialogController.prototype.login = function () {
+        this.$mdDialog.hide({ username: this.username, password: this.password });
+    };
+    return LoginDialogController;
+});
+
