@@ -1,5 +1,32 @@
 
 var my = angular.module('myApp',['ngMaterial', 'ngMessages', 'material.svgAssetsCache','mwl.calendar', 'ngAnimate', 'ui.bootstrap', 'colorpicker.module']);
+var vm;
+
+function getTermine($http, token) {
+    console.log("getTermine-Token: " + token);
+    var tok = {
+        token: token
+    };
+    $http.post("/gettermine", tok).success(function (data, status) {
+        vm.events = [];
+        for ( var i = 0 ; i < data.length ; i++){
+            vm.events.push({
+                date: vm.lastDateClicked,
+                title: data[i].terminname,
+                location: data[i].ort,
+                description: data[i].beschreibung,
+                alerttime: data[i].benachrichtigungZeit,
+                startsAt: data[i].start,
+                endsAt: data[i].ende,
+                draggable: false,
+                resizable: false,
+                benachrichtigungEinheit: data[i].benachrichtigungseinheit
+            });
+        }
+
+        console.log(data);
+    });
+}
 
 
 my.controller('AppCtrl', function($scope, $mdDialog) {
@@ -48,6 +75,14 @@ my.controller('AppCtrl', function($scope, $mdDialog) {
                 };
                 console.log($scope.email);
                 $http.post("/login", JSON.stringify(data)).success(function (data, status) {
+                    if(data.success == true){
+                        var token = data.token;
+                        localStorage.setItem('token', token); // write
+                        console.log(localStorage.getItem('token')); // read
+                        getTermine($http, token);
+                    } else {
+                        console.log(data.message);
+                    }
                     console.log('Data posted successfully');
                 });
                 $mdDialog.cancel();
@@ -68,7 +103,7 @@ my.controller('DaysTest' ,function ($scope) {
 
 my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarConfig, $mdDialog) {
 
-    var vm = this;
+    vm = this;
     var counter = 0;
 
     //These variables MUST be set as a minimum for the calendar to work
@@ -258,6 +293,7 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                             };
                             console.log($scope.name);
                             $http.post("/", JSON.stringify(data)).success(function (data, status) {
+                                vm.events = [];
                                 for ( var i = 0 ; i < data.length ; i++){
                                     vm.events.push({
                                         index: counter,
@@ -344,4 +380,6 @@ var LoginDialogController = (function () {
     };
     return LoginDialogController;
 });
+
+
 

@@ -3,6 +3,7 @@ var router = express.Router();
 var mysql = require('mysql');
 var database = require('./database.js');  // This will load your fitness module
 var jwt    = require('jsonwebtoken');
+var jwtDecode = require('jwt-decode');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -74,10 +75,26 @@ router.post('/',function(req,res) {
     var beschreibung = jsonRequest['beschreibung'];
     var ersteFarbe = jsonRequest['ersteFarbe'];
     var zweiteFarbe = jsonRequest['zweiteFarbe']
-    var userid = 1;
+
 
     //database.saveToDatabase(terminname,ort,start,ende,benachrichtigungZeit,benachrichtigungseinheit,beschreibung, ersteFarbe, zweiteFarbe ,userid);
-    database.readeDatabaseTermine(userid, mycallback);
+    database.readDatabaseTermine(mycallback);
+    function mycallback(data) {
+        res.send(data);
+    }
+
+});
+
+router.post('/gettermine',function(req,res) {
+    //var jsonRequest  = req.body;
+
+    console.log("req: " + req.body.token);
+    var decoded = jwt.decode(req.body.token);
+
+    console.log(decoded);
+    var userid = decoded.userid;
+    //database.saveToDatabase(terminname,ort,start,ende,benachrichtigungZeit,benachrichtigungseinheit,beschreibung, ersteFarbe, zweiteFarbe ,userid);
+    database.readDatabaseTermine(mycallback, userid);
     function mycallback(data) {
         res.send(data);
     }
