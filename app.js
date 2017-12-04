@@ -35,6 +35,26 @@ app.use('/views',  express.static(__dirname + '/public/views'));
 app.use(express.static(__dirname + '/public'));
 app.use('/stylesheets',  express.static(__dirname + '/public/stylesheets'));
 
+
+var fs = require('fs');
+
+var key = fs.readFileSync('encryption/private.key');
+var cert = fs.readFileSync( 'encryption/example.crt');
+
+var options = {
+    key: key,
+    cert: cert
+};
+var https = require('https');
+https.createServer(options, app).listen(443);
+
+var http = require('http');
+http.createServer(app).listen(80);
+
+var forceSsl = require('express-force-ssl');
+app.use(forceSsl);
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -53,9 +73,14 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+/*
 var port = 3000;
 app.listen(port, function () {
     console.log('app listening on port ' +port);
 });
+*/
 module.exports = app;
+
+
+
 
