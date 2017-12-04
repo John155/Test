@@ -77,19 +77,21 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
     var actions = [{
         label: '<i class=\'glyphicon glyphicon-pencil\'></i>',
         onClick: function(args) {
+            //edit event
+            vm.eventClicked(args.calendarEvent);
             alert.show('Edited', args.calendarEvent);
         }
     }, {
         label: '<i class=\'glyphicon glyphicon-remove\'></i>',
         onClick: function(args) {
+            vm.cellIsOpen = false;
             alert.show('Deleted', args.calendarEvent);
         }
     }];
 
     vm.events = [];
 
-
-    vm.cellIsOpen = true;
+    vm.cellIsOpen = false;
 
     vm.addEvent = function() {
         vm.events.push({
@@ -105,7 +107,6 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
             resizable: false
         });
     };
-
 
 
     vm.eventClicked = function(event) {
@@ -180,7 +181,14 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
         if (vm.calendarView === 'month') {
             if ((vm.cellIsOpen && moment(date).startOf('day').isSame(moment(vm.viewDate).startOf('day'))) || cell.events.length === 0 || !cell.inMonth) {
                 vm.cellIsOpen = false;
-                vm.timespanClicked = function (date) {
+            } else {
+                vm.cellIsOpen = true;
+                vm.viewDate = date;
+            }
+
+            if(vm.calendarView === 'month') {
+                if (!vm.cellIsOpen) {
+                    vm.cellIsOpen = false;
                     vm.lastDateClicked = date;
 
                     //show eigen angefertigten dialog anzeigen
@@ -192,10 +200,15 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
 
                     function DialogController($scope, $mdDialog, $http) {
 
+                        var farbe = {
+                            primary: "#f01010",
+                            secondary: "#ffffff"
+                        };
+
                         var tempt = {
                             startsAt: vm.lastDateClicked,
                             endsAt: vm.lastDateClicked,
-                            color: calendarConfig.colorTypes.important
+                            color:  farbe
                         };
 
                         $scope.eve = tempt;
@@ -226,10 +239,10 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                                 endsAt: tempt.endsAt,
                                 color: tempt.color,
                                 draggable: false,
-                                resizable: false
+                                resizable: false,
+                                actions: actions
                             });
 
-                            console.log(tempt.startsAt.getTime());
 
                             var data = {
                                 title: $scope.title,
