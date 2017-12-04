@@ -240,6 +240,7 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                                 color: tempt.color,
                                 draggable: false,
                                 resizable: false,
+                                benachrichtigungEinheit: $scope.zeitOption,
                                 actions: actions
                             });
 
@@ -247,15 +248,34 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                             var data = {
                                 title: $scope.title,
                                 location: $scope.location,
-                                start: $scope.start,
-                                ende: $scope.ende,
-                                benachrichtigungZeit: $scope.benachrichtigungZeit,
-                                benachrichtigungEinheit: $scope.benachrichtigungEinheit,
-                                beschreibung: $scope.beschreibung
+                                start: tempt.startsAt.getTime(),
+                                ende: tempt.endsAt.getTime(),
+                                benachrichtigungZeit: $scope.alerttime,
+                                benachrichtigungEinheit: $scope.zeitOption,
+                                beschreibung: $scope.description,
+                                ersteFarbe: tempt.color.primary.toString(),
+                                zweiteFarbe: tempt.color.secondary.toString()
                             };
                             console.log($scope.name);
                             $http.post("/", JSON.stringify(data)).success(function (data, status) {
-                                console.log('Data posted successfully');
+                                for ( var i = 0 ; i < data.length ; i++){
+                                    vm.events.push({
+                                        index: counter,
+                                        date: vm.lastDateClicked,
+                                        title: data[i].terminname,
+                                        location: data[i].ort,
+                                        description: data[i].beschreibung,
+                                        alerttime: data[i].benachrichtigungZeit,
+                                        startsAt: data[i].start,
+                                        endsAt: data[i].ende,
+                                        color: tempt.color,
+                                        draggable: false,
+                                        resizable: false,
+                                        benachrichtigungEinheit: data[i].benachrichtigungseinheit
+                                    });
+                                }
+
+                                console.log(data);
                             });
                             counter = counter + 1;
                             $mdDialog.cancel();
