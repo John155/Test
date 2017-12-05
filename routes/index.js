@@ -64,9 +64,8 @@ router.post('/login', function(req, res) {
 
 router.post('/',function(req,res) {
     var jsonRequest  = req.body;
-
-
     console.log(jsonRequest);
+
     var terminname = jsonRequest['title'];
     var ort = jsonRequest['location'];
     var start = jsonRequest['start'];
@@ -77,10 +76,18 @@ router.post('/',function(req,res) {
     var ersteFarbe = jsonRequest['ersteFarbe'];
     var zweiteFarbe = jsonRequest['zweiteFarbe']
 
+    console.log(" token from / result body ----> "+req.body.token);
+    var decoded = jwt.decode(req.body.token);
 
-    //database.saveToDatabase(terminname,ort,start,ende,benachrichtigungZeit,benachrichtigungseinheit,beschreibung, ersteFarbe, zweiteFarbe ,userid);
-    database.readDatabaseTermine(mycallback);
-    function mycallback(data) {
+    var userid = decoded.userid;
+    console.log(" token from / result userid ----> "+ userid);
+
+    database.saveToDatabase(terminname,ort,start,ende,benachrichtigungZeit,benachrichtigungseinheit,beschreibung, ersteFarbe, zweiteFarbe, saveToDatabaseCallback, userid);
+
+    function saveToDatabaseCallback() {
+        database.readDatabaseTermine(readDatabaseTermineCallback, userid);
+    }
+    function readDatabaseTermineCallback(data) {
         res.send(data);
     }
 

@@ -12,7 +12,11 @@ function getTermine($http) {
         };
         $http.post("/gettermine", tok).success(function (data, status) {
             vm.events = [];
-            for (var i = 0; i < data.length; i++) {
+            for ( var i = 0 ; i < data.length ; i++) {
+                var farbe = {
+                    primary: data[i].ersteFarbe,
+                    secondary: data[i].zweiteFarbe
+                };
                 vm.events.push({
                     date: vm.lastDateClicked,
                     title: data[i].terminname,
@@ -23,11 +27,10 @@ function getTermine($http) {
                     endsAt: data[i].ende,
                     draggable: false,
                     resizable: false,
+                    color: farbe,
                     benachrichtigungEinheit: data[i].benachrichtigungseinheit
                 });
             }
-
-            console.log(data);
         });
     } else {
         //alert("Sie sind nicht eingeloggt");
@@ -38,9 +41,6 @@ function getTermine($http) {
 
 
 my.controller('AppCtrl', function($scope, $mdDialog, $http) {
-
-    var ac = this;
-
 
 
     $scope.registrierenDialog = function () {
@@ -155,9 +155,7 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
     }];
 
     vm.events = [];
-
     vm.cellIsOpen = false;
-
     vm.addEvent = function() {
         vm.events.push({
             date: vm.lastDateClicked,
@@ -189,6 +187,7 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
             $scope.location = event.location;
             $scope.alerttime = event.alerttime;
             $scope.color = event.color;
+            $scope.zeitOption = event.benachrichtigungEinheit;
 
 
             $scope.eve = event;
@@ -293,7 +292,7 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
 
                         $scope.save = function () {
 
-                            vm.events.push({
+                            /*vm.events.push({
                                 index: counter,
                                 date: vm.lastDateClicked,
                                 title: $scope.title,
@@ -307,14 +306,15 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                                 resizable: false,
                                 benachrichtigungEinheit: $scope.zeitOption,
                                 actions: actions
-                            });
+                            });*/
 
 
                             var data = {
+                                token:  sessionStorage.getItem("token"),
                                 title: $scope.title,
                                 location: $scope.location,
-                                start: tempt.startsAt.getTime(),
-                                ende: tempt.endsAt.getTime(),
+                                start: $scope.eve.startsAt.getTime(),
+                                ende: $scope.eve.endsAt.getTime(),
                                 benachrichtigungZeit: $scope.alerttime,
                                 benachrichtigungEinheit: $scope.zeitOption,
                                 beschreibung: $scope.description,
@@ -325,8 +325,11 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                             $http.post("/", JSON.stringify(data)).success(function (data, status) {
                                 vm.events = [];
                                 for ( var i = 0 ; i < data.length ; i++){
+                                    var farbe = {
+                                        primary: data[i].ersteFarbe,
+                                        secondary: data[i].zweiteFarbe
+                                    };
                                     vm.events.push({
-                                        index: counter,
                                         date: vm.lastDateClicked,
                                         title: data[i].terminname,
                                         location: data[i].ort,
@@ -334,15 +337,15 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                                         alerttime: data[i].benachrichtigungZeit,
                                         startsAt: data[i].start,
                                         endsAt: data[i].ende,
-                                        color: tempt.color,
                                         draggable: false,
                                         resizable: false,
+                                        color: farbe,
+                                        alerttime: data[i].benachrichtigungZeit,
                                         benachrichtigungEinheit: data[i].benachrichtigungseinheit
                                     });
                                 }
-
-                                console.log(data);
                             });
+
                             counter = counter + 1;
                             $mdDialog.cancel();
 
