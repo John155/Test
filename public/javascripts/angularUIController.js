@@ -2,34 +2,46 @@
 var my = angular.module('myApp',['ngMaterial', 'ngMessages', 'material.svgAssetsCache','mwl.calendar', 'ngAnimate', 'ui.bootstrap', 'colorpicker.module']);
 var vm;
 
-function getTermine($http, token) {
-    console.log("getTermine-Token: " + token);
-    var tok = {
-        token: token
-    };
-    $http.post("/gettermine", tok).success(function (data, status) {
-        vm.events = [];
-        for ( var i = 0 ; i < data.length ; i++){
-            vm.events.push({
-                date: vm.lastDateClicked,
-                title: data[i].terminname,
-                location: data[i].ort,
-                description: data[i].beschreibung,
-                alerttime: data[i].benachrichtigungZeit,
-                startsAt: data[i].start,
-                endsAt: data[i].ende,
-                draggable: false,
-                resizable: false,
-                benachrichtigungEinheit: data[i].benachrichtigungseinheit
-            });
-        }
 
-        console.log(data);
-    });
+function getTermine($http) {
+    var token = sessionStorage.getItem("token");
+    if (token) {
+        console.log("getTermine-Token: " + token);
+        var tok = {
+            token: token
+        };
+        $http.post("/gettermine", tok).success(function (data, status) {
+            vm.events = [];
+            for (var i = 0; i < data.length; i++) {
+                vm.events.push({
+                    date: vm.lastDateClicked,
+                    title: data[i].terminname,
+                    location: data[i].ort,
+                    description: data[i].beschreibung,
+                    alerttime: data[i].benachrichtigungZeit,
+                    startsAt: data[i].start,
+                    endsAt: data[i].ende,
+                    draggable: false,
+                    resizable: false,
+                    benachrichtigungEinheit: data[i].benachrichtigungseinheit
+                });
+            }
+
+            console.log(data);
+        });
+    } else {
+        //alert("Sie sind nicht eingeloggt");
+        vm.events = [];
+    }
 }
 
 
-my.controller('AppCtrl', function($scope, $mdDialog) {
+
+my.controller('AppCtrl', function($scope, $mdDialog, $http) {
+
+    var ac = this;
+
+
 
     $scope.registrierenDialog = function () {
         $mdDialog.show({
@@ -77,9 +89,11 @@ my.controller('AppCtrl', function($scope, $mdDialog) {
                 $http.post("/login", JSON.stringify(data)).success(function (data, status) {
                     if(data.success == true){
                         var token = data.token;
-                        localStorage.setItem('token', token); // write
-                        console.log(localStorage.getItem('token')); // read
-                        getTermine($http, token);
+                        sessionStorage.setItem('token', token); // write
+                        sessionStorage.setItem('name', data.username);
+                        console.log(sessionStorage.getItem('token')); // read
+                        getTermine($http);
+                        console.log($scope.parent);
                     } else {
                         console.log(data.message);
                     }
@@ -94,6 +108,19 @@ my.controller('AppCtrl', function($scope, $mdDialog) {
 
         };
     }
+
+    $scope.registrierenDialog = function () {
+        $mdDialog.show({
+            controller: RegistrierenController,
+            clickOutsideToClose: true,
+            templateUrl: '../ejs/registrieren.ejs'
+        });
+    }
+
+    $scope.abmelden = function () {
+        sessionStorage.clear();
+        getTermine($http);
+    };
 });
 
 
@@ -101,10 +128,13 @@ my.controller('DaysTest' ,function ($scope) {
     $scope.names = [{Name: 'Montag'}, {Name: 'Dienstag'}, {Name: 'Mittwoch'}, {Name: 'Donnerstag'}, {Name: 'Freitag'}, {Name: 'Samstag'}, {Name: 'Sonntag'}];
 });
 
-my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarConfig, $mdDialog) {
+my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarConfig, $mdDialog, $http) {
 
     vm = this;
     var counter = 0;
+
+
+    $scope.onPageLoad = getTermine($http);
 
     //These variables MUST be set as a minimum for the calendar to work
     vm.calendarView = 'month';

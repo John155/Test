@@ -53,6 +53,7 @@ router.post('/login', function(req, res) {
                 success: true,
                 message: 'Hallo, ' + data[0].name,
                 userid: data[0].id,
+                username: data[0].name,
                 token: token
             });
         }
