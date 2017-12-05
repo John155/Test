@@ -1,11 +1,126 @@
 
 var my = angular.module('myApp',['ngMaterial', 'ngMessages', 'material.svgAssetsCache','mwl.calendar', 'ngAnimate', 'ui.bootstrap', 'colorpicker.module']);
+var vm;
+
+
+function getTermine($http) {
+    var token = sessionStorage.getItem("token");
+    if (token) {
+        console.log("getTermine-Token: " + token);
+        var tok = {
+            token: token
+        };
+        $http.post("/gettermine", tok).success(function (data, status) {
+            vm.events = [];
+            for (var i = 0; i < data.length; i++) {
+                vm.events.push({
+                    date: vm.lastDateClicked,
+                    title: data[i].terminname,
+                    location: data[i].ort,
+                    description: data[i].beschreibung,
+                    alerttime: data[i].benachrichtigungZeit,
+                    startsAt: data[i].start,
+                    endsAt: data[i].ende,
+                    draggable: false,
+                    resizable: false,
+                    benachrichtigungEinheit: data[i].benachrichtigungseinheit
+                });
+            }
+
+            console.log(data);
+        });
+    } else {
+        //alert("Sie sind nicht eingeloggt");
+        vm.events = [];
+    }
+}
 
 
 
+my.controller('AppCtrl', function($scope, $mdDialog, $http) {
 
-my.controller('AppCtrl', function($scope, $mdDialog) {
+    var ac = this;
 
+
+
+    $scope.registrierenDialog = function () {
+        $mdDialog.show({
+            controller: RegistrierenController,
+            clickOutsideToClose: true,
+            templateUrl: '../ejs/registrieren.ejs'
+        });
+
+        function RegistrierenController($scope, $mdDialog, $http) {
+
+            $scope.registrieren = function () {
+                var data = {
+                    email: $scope.email,
+                    password: $scope.password
+                };
+                console.log($scope.email);
+                $http.post("/registrieren", JSON.stringify(data)).success(function (data, status) {
+                    console.log('Data posted successfully');
+                });
+                $mdDialog.cancel();
+            };
+
+            $scope.cancel = function () {
+                $mdDialog.cancel();
+            };
+
+        };
+    }
+
+    $scope.loginDialog = function () {
+        $mdDialog.show({
+            controller: LoginController,
+            clickOutsideToClose: true,
+            templateUrl: '../ejs/login.ejs'
+        });
+
+        function LoginController($scope, $mdDialog, $http) {
+
+            $scope.login = function () {
+                var data = {
+                    email: $scope.email,
+                    password: $scope.password
+                };
+                console.log($scope.email);
+                $http.post("/login", JSON.stringify(data)).success(function (data, status) {
+                    if(data.success == true){
+                        var token = data.token;
+                        sessionStorage.setItem('token', token); // write
+                        sessionStorage.setItem('name', data.username);
+                        console.log(sessionStorage.getItem('token')); // read
+                        getTermine($http);
+                        console.log($scope.parent);
+                    } else {
+                        console.log(data.message);
+                    }
+                    console.log('Data posted successfully');
+                });
+                $mdDialog.cancel();
+            };
+
+            $scope.cancel = function () {
+                $mdDialog.cancel();
+            };
+
+        };
+    }
+
+    $scope.registrierenDialog = function () {
+        $mdDialog.show({
+            controller: RegistrierenController,
+            clickOutsideToClose: true,
+            templateUrl: '../ejs/registrieren.ejs'
+        });
+    }
+
+    $scope.abmelden = function () {
+        sessionStorage.clear();
+        getTermine($http);
+    };
 });
 
 
@@ -13,15 +128,17 @@ my.controller('DaysTest' ,function ($scope) {
     $scope.names = [{Name: 'Montag'}, {Name: 'Dienstag'}, {Name: 'Mittwoch'}, {Name: 'Donnerstag'}, {Name: 'Freitag'}, {Name: 'Samstag'}, {Name: 'Sonntag'}];
 });
 
-my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarConfig, $mdDialog) {
+my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarConfig, $mdDialog, $http) {
 
-    var vm = this;
+    vm = this;
     var counter = 0;
+
+
+    $scope.onPageLoad = getTermine($http);
+
     //These variables MUST be set as a minimum for the calendar to work
     vm.calendarView = 'month';
     vm.viewDate = new Date();
-
-
     var actions = [{
         label: '<i class=\'glyphicon glyphicon-pencil\'></i>',
         onClick: function(args) {
@@ -126,7 +243,6 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
 
     vm.timespanClicked = function(date, cell) {
 
-
         if (vm.calendarView === 'month') {
             if ((vm.cellIsOpen && moment(date).startOf('day').isSame(moment(vm.viewDate).startOf('day'))) || cell.events.length === 0 || !cell.inMonth) {
                 vm.cellIsOpen = false;
@@ -177,7 +293,6 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
 
                         $scope.save = function () {
 
-
                             vm.events.push({
                                 index: counter,
                                 date: vm.lastDateClicked,
@@ -190,6 +305,7 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                                 color: tempt.color,
                                 draggable: false,
                                 resizable: false,
+                                benachrichtigungEinheit: $scope.zeitOption,
                                 actions: actions
                             });
 
@@ -197,24 +313,103 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                             var data = {
                                 title: $scope.title,
                                 location: $scope.location,
-                                start: $scope.start,
-                                ende: $scope.ende,
-                                benachrichtigungZeit: $scope.benachrichtigungZeit,
-                                benachrichtigungEinheit: $scope.benachrichtigungEinheit,
-                                beschreibung: $scope.beschreibung
+                                start: tempt.startsAt.getTime(),
+                                ende: tempt.endsAt.getTime(),
+                                benachrichtigungZeit: $scope.alerttime,
+                                benachrichtigungEinheit: $scope.zeitOption,
+                                beschreibung: $scope.description,
+                                ersteFarbe: tempt.color.primary.toString(),
+                                zweiteFarbe: tempt.color.secondary.toString()
                             };
                             console.log($scope.name);
                             $http.post("/", JSON.stringify(data)).success(function (data, status) {
-                                console.log('Data posted successfully');
+                                vm.events = [];
+                                for ( var i = 0 ; i < data.length ; i++){
+                                    vm.events.push({
+                                        index: counter,
+                                        date: vm.lastDateClicked,
+                                        title: data[i].terminname,
+                                        location: data[i].ort,
+                                        description: data[i].beschreibung,
+                                        alerttime: data[i].benachrichtigungZeit,
+                                        startsAt: data[i].start,
+                                        endsAt: data[i].ende,
+                                        color: tempt.color,
+                                        draggable: false,
+                                        resizable: false,
+                                        benachrichtigungEinheit: data[i].benachrichtigungseinheit
+                                    });
+                                }
+
+                                console.log(data);
                             });
                             counter = counter + 1;
                             $mdDialog.cancel();
 
                         }
+
                     }
                 }
-
             }
         }
+
     }
 });
+
+my.controller('LoginCtrl', function($scope, $mdDialog, $mdMedia, $mdToast) {
+    var lc = this;
+    this.$scope = $scope;
+    this.$mdDialog = $mdDialog;
+    this.$mdMedia = $mdMedia;
+    this.$mdToast = $mdToast;
+    this.status = '';
+
+
+    lc.prototype.showDialog = function (event) {
+        var _this = this;
+        this.$mdDialog.show({
+            controller: LoginDialogController,
+            controllerAs: 'dialog',
+            templateUrl: 'login-dialog.template.html',
+            parent: angular.element(document.body),
+            targetEvent: event,
+            clickOutsideToClose: true,
+        })
+            .then(function (credentials) {
+                return _this.showToast("Thanks for logging in, " + credentials.username + ".");
+            }, function () {
+                return _this.showToast('You canceled the login.');
+            });
+        this.$scope.$watch(function () {
+            return _this.$mdMedia('xs') || _this.$mdMedia('sm');
+        }, function (wantsFullScreen) {
+            return _this.customFullscreen = wantsFullScreen === true;
+        });
+    };
+    lc.prototype.showToast = function (content) {
+        this.$mdToast.show(this.$mdToast.simple()
+            .content(content)
+            .position('top right')
+            .hideDelay(3000));
+    };
+});
+
+
+var LoginDialogController = (function () {
+    function LoginDialogController($mdDialog) {
+        this.$mdDialog = $mdDialog;
+    }
+    LoginDialogController.prototype.hide = function () {
+        this.$mdDialog.hide();
+    };
+    LoginDialogController.prototype.close = function () {
+        this.$mdDialog.cancel();
+    };
+    LoginDialogController.prototype.login = function () {
+        this.$mdDialog.hide({ username: this.username, password: this.password });
+    };
+    return LoginDialogController;
+});
+
+
+

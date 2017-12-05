@@ -51,15 +51,21 @@
                     <div class="md-toolbar-tools">
                         <md-truncate style="position: absolute; left: 90px; right: 170px; top: 13px; bottom: 13px;">Kalender</md-truncate>
 
-                        <span flex=""></span>
-                        <i class="material-icons">account_circle</i>
-                        <md-button class="md-raised" ng-click="">
-                            Anmelden
-                        </md-button>
-                        <md-button class="md-raised" ng-click="">
-                            Registrieren
-                        </md-button>
-                    </div>
+                    <span flex=""></span>
+                    <!--<i class="material-icons">account_circle</i>-->
+                    <md-button class="md-raised" ng-click="loginDialog()">
+                        Anmelden
+                    </md-button>
+
+                    <md-button class="md-raised" ng-click="registrierenDialog()">
+                        Registrieren
+                    </md-button>
+
+                    <md-button class="md-raised" ng-click="abmelden()">
+                        Abmelden
+                    </md-button>
+
+                </div>
             </md-toolbar>
 
             <!--<md-toolbar>
@@ -76,7 +82,7 @@
     </div>
 
 
-    <div ng-controller="DraggableExternalEventsCtrl as vm">
+    <div ng-controller="DraggableExternalEventsCtrl as vm" data-ng-init="onPageLoad()">
 
         <div class="row">
 

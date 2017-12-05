@@ -71,8 +71,8 @@
                     <br>
                     <label>
                         Benachrichtigung
-                        <input type="number" name="Zeit" min="0" max="59" value="0" size="2" ng-model="alerttime">
-                        <select>
+                        <input type="number" name="Zeit" value="0" size="2" ng-model="alerttime">
+                        <select ng-model="zeitOption">
                             <option value="minuten">Minute/n</option>
                             <option value="stunden">Stunde/n</option>
                         </select>
