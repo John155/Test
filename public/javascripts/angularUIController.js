@@ -70,11 +70,15 @@ my.controller('AppCtrl', function($scope, $mdDialog, $http) {
 
             $scope.registrieren = function () {
                 var data = {
+                    name: $scope.username,
                     email: $scope.email,
                     password: $scope.password
                 };
+
+                console.log($scope.username);
                 console.log($scope.email);
-                if (data.email != null && data.password != null) {
+                console.log($scope.password);
+                if (data.name != null && data.email != null && data.password != null) {
                     $http.post("/registrieren", JSON.stringify(data)).success(function (data, status) {
                         console.log('Data posted successfully');
                     });

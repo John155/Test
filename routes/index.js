@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 router.post('/registrieren', function(req, res) {
     var jsonRequest  = req.body;
     console.log(jsonRequest['email']);
-    database.createUser( jsonRequest['email'],jsonRequest['password'],0);
+    database.createUser( jsonRequest['name'],jsonRequest['email'],jsonRequest['password'],0);
 });
 
 router.post('/login', function(req, res) {

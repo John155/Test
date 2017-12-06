@@ -1,41 +1,52 @@
 md-datepicker-input {
-  background: magenta;
+    background: magenta;
 }
 owntoolbar{
-  background: white;
+    background: white;
 }
 
 
 
 .virtualRepeatdemoHorizontalUsage #horizontal-container {
-  height: 100px;
-  width: 100%;
-  max-width: 830px; }
+    height: 100px;
+    width: 100%;
+    max-width: 830px;
+}
 
 .virtualRepeatdemoHorizontalUsage .repeated-item {
-  border-right: 1px solid #ddd;
-  box-sizing: border-box;
-  display: inline-block;
-  height: 84px;
-  padding-top: 35px;
-  text-align: center;
-  width: 50px; }
+    border-right: 1px solid #ddd;
+    box-sizing: border-box;
+    display: inline-block;
+    height: 84px;
+    padding-top: 35px;
+    text-align: center;
+    width: 50px;
+}
 
 .virtualRepeatdemoHorizontalUsage md-content {
-  margin: 16px; }
+    margin: 16px;
+}
 
 .virtualRepeatdemoHorizontalUsage md-virtual-repeat-container {
-  border: solid 1px grey; }
+    border: solid 1px grey;
+}
 
 .mytable{
-  border: 1px solid black;
-  width: 1%;
-
+    border: 1px solid black;
+    width: 1%;
 }
 .toolbardemoBasicUsage md-toolbar md-icon.md-default-theme {
-  color: white; }
+    color: white;
+}
 
 .col-md-9 {
-  width: 100%;
+    width: 100%;
 }
+
+.md-dialog-content {
+    width: 100%;
+}
+
+
+
 

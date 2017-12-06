@@ -25,10 +25,10 @@ var connectTerminetToUser =  function  (userid , terminID) {
     });
 };
 
-var createUser = function(name ,password , isAdmin) {
+var createUser = function(name, email ,password , isAdmin) {
 
-    var sql = "INSERT INTO users (name,password,admin)"
-    + " VALUES ('" + name + "','" + password + "','" + isAdmin + "')";
+    var sql = "INSERT INTO users (name,email,password,admin)"
+    + " VALUES ('" + name + "','" + email + "','" + password + "','" + isAdmin + "')";
     console.log(sql);
     connection.query(sql, function (err, result) {
         if (err) console.log("createUser: User konnte nicht erstellt werden. " + err);//throw err;
