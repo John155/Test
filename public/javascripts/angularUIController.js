@@ -19,6 +19,7 @@ function getTermine($http) {
                     secondary: data[i].zweiteFarbe
                 };
                 vm.events.push({
+                    idTermin: data[i].idtermin,
                     date: vm.lastDateClicked,
                     title: data[i].terminname,
                     location: data[i].ort,
@@ -145,15 +146,9 @@ my.controller('AppCtrl', function($scope, $mdDialog, $http) {
 });
 
 
-my.controller('DaysTest' ,function ($scope) {
-    $scope.names = [{Name: 'Montag'}, {Name: 'Dienstag'}, {Name: 'Mittwoch'}, {Name: 'Donnerstag'}, {Name: 'Freitag'}, {Name: 'Samstag'}, {Name: 'Sonntag'}];
-});
-
 my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarConfig, $mdDialog, $http) {
 
     vm = this;
-    var counter = 0;
-
 
     $scope.onPageLoad = getTermine($http);
 
@@ -201,7 +196,11 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
             clickOutsideToClose:true,
             templateUrl: '../ejs/eventDialog.ejs'
         });
-        function DialogController($scope, $mdDialog)  {
+        function DialogController($scope, $mdDialog,$http)  {
+
+            $scope.date = function ($event, field, event) {
+                vm.toggle($event, field, event);
+            };
 
             $scope.title = event.title;
             $scope.description = event.description;
@@ -214,19 +213,62 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
             $scope.eve = event;
 
             $scope.save = function() {
-
-                event.title = $scope.title;
+                /*event.title = $scope.title;
                 event.description = $scope.description;
                 event.location = $scope.location;
                 event.alerttime = $scope.alerttime;
-                event.color = $scope.color;
+                event.color = $scope.color;*/
+                var farbe = {
+                    primary: "#f01010",
+                    secondary: "#ffffff"
+                };
 
-                $mdDialog.hide();
+                var tempt = {
+                    startsAt: vm.lastDateClicked,
+                    endsAt: vm.lastDateClicked,
+                    color:  farbe
+                };
+                var editTerminData = {
+                    idTermin: event.idTermin,
+                    token:  sessionStorage.getItem("token"),
+                    title: $scope.title,
+                    location: $scope.location,
+                    start: $scope.eve.startsAt.getTime(),
+                    ende: $scope.eve.endsAt.getTime(),
+                    benachrichtigungZeit: $scope.alerttime,
+                    benachrichtigungEinheit: $scope.zeitOption,
+                    beschreibung: $scope.description,
+                    ersteFarbe: event.color.primary.toString(),
+                    zweiteFarbe: event.color.secondary.toString()
+                };
+
+                $http.post("/editTermin", JSON.stringify(editTerminData)).success(function (data, status) {
+                    vm.events = [];
+                    vm.viewDate = new Date();
+                    for ( var i = 0 ; i < data.length ; i++){
+                        var farbe = {
+                            primary: data[i].ersteFarbe,
+                            secondary: data[i].zweiteFarbe
+                        };
+                        vm.events.push({
+                            date: vm.lastDateClicked,
+                            title: data[i].terminname,
+                            location: data[i].ort,
+                            description: data[i].beschreibung,
+                            alerttime: data[i].benachrichtigungZeit,
+                            startsAt: data[i].start,
+                            endsAt: data[i].ende,
+                            draggable: false,
+                            resizable: false,
+                            color: farbe,
+                            alerttime: data[i].benachrichtigungZeit,
+                            benachrichtigungEinheit: data[i].benachrichtigungseinheit
+                        });
+                    }
+                });
+                $mdDialog.cancel();
             };
 
-            $scope.date = function ($event, field, event) {
-                vm.toggle($event, field, event);
-            };
 
             $scope.cancel = function() {
                 $mdDialog.cancel();
@@ -238,8 +280,6 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
             }
 
         }
-
-        alert.show('Clicked', event);
     };
 
     vm.eventEdited = function(event) {
@@ -313,24 +353,7 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
 
                         $scope.save = function () {
 
-                            /*vm.events.push({
-                                index: counter,
-                                date: vm.lastDateClicked,
-                                title: $scope.title,
-                                location: $scope.location,
-                                description: $scope.description,
-                                alerttime: $scope.alerttime,
-                                startsAt: tempt.startsAt,
-                                endsAt: tempt.endsAt,
-                                color: tempt.color,
-                                draggable: false,
-                                resizable: false,
-                                benachrichtigungEinheit: $scope.zeitOption,
-                                actions: actions
-                            });*/
-
-
-                            var data = {
+                            var newTermindata = {
                                 token:  sessionStorage.getItem("token"),
                                 title: $scope.title,
                                 location: $scope.location,
@@ -343,7 +366,7 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                                 zweiteFarbe: tempt.color.secondary.toString()
                             };
                             console.log($scope.name);
-                            $http.post("/", JSON.stringify(data)).success(function (data, status) {
+                            $http.post("/", JSON.stringify(newTermindata)).success(function (data, status) {
                                 vm.events = [];
                                 for ( var i = 0 ; i < data.length ; i++){
                                     var farbe = {
@@ -351,6 +374,7 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                                         secondary: data[i].zweiteFarbe
                                     };
                                     vm.events.push({
+                                        idTermin: data[i].idTermin,
                                         date: vm.lastDateClicked,
                                         title: data[i].terminname,
                                         location: data[i].ort,
@@ -366,8 +390,6 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                                     });
                                 }
                             });
-
-                            counter = counter + 1;
                             $mdDialog.cancel();
 
                         }

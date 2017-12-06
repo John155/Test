@@ -7,7 +7,7 @@ var jwtDecode = require('jwt-decode');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index');
 });
 
 router.post('/registrieren', function(req, res) {
@@ -93,19 +93,55 @@ router.post('/',function(req,res) {
 
 });
 
+router.post('/editTermin',function(req,res) {
+
+    var jsonRequest  = req.body;
+    console.log("Comment from editTermin -----> " + jsonRequest);
+
+    var idTermin = jsonRequest['idTermin'];
+    var terminname = jsonRequest['title'];
+    var ort = jsonRequest['location'];
+    var start = jsonRequest['start'];
+    var ende = jsonRequest['ende'];
+    var benachrichtigungZeit = jsonRequest['benachrichtigungZeit'];
+    var benachrichtigungseinheit = jsonRequest['benachrichtigungEinheit'];
+    var beschreibung = jsonRequest['beschreibung'];
+    var ersteFarbe = jsonRequest['ersteFarbe'];
+    var zweiteFarbe = jsonRequest['zweiteFarbe']
+
+    //console.log(" token from editCalendar ----> "+req.body.token);
+    var decoded = jwt.decode(req.body.token);
+
+    var userid = decoded.userid;
+    //console.log(" token from / result userid ----> "+ userid);
+
+    database.isTerminFromUser(userid, idTermin, isTerminFromUserCallback);
+
+
+    function isTerminFromUserCallback() {
+        database.updateTermin(idTermin,terminname,ort,start,ende,benachrichtigungZeit,benachrichtigungseinheit,beschreibung, ersteFarbe, zweiteFarbe, updateTerminCallBack);
+    }
+    function updateTerminCallBack() {
+        database.readDatabaseTermine(readDatabaseTermineCallback, userid);
+    }
+    function readDatabaseTermineCallback(data) {
+        res.send(data);
+    }
+});
+
 router.post('/gettermine',function(req,res) {
     //var jsonRequest  = req.body;
 
-    console.log("req: " + req.body.token);
+    //console.log("req: " + req.body.token);
     var decoded = jwt.decode(req.body.token);
 
-    console.log(decoded);
+    //console.log(decoded);
     var userid = decoded.userid;
-    //database.saveToDatabase(terminname,ort,start,ende,benachrichtigungZeit,benachrichtigungseinheit,beschreibung, ersteFarbe, zweiteFarbe ,userid);
     database.readDatabaseTermine(mycallback, userid);
     function mycallback(data) {
         res.send(data);
     }
 
 });
+
 module.exports = router;

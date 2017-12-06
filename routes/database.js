@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
     if (err) throw err;
-    console.log("Database Connected!");
+    //console.log("Database Connected!");
 });
 
 var connectTerminetToUser =  function  (userid , terminID) {
@@ -31,6 +31,8 @@ var createUser = function(name, email ,password , isAdmin) {
     + " VALUES ('" + name + "','" + email + "','" + password + "','" + isAdmin + "')";
     console.log(sql);
     connection.query(sql, function (err, result) {
+        if (err) throw err;
+        //console.log("User(" + name + ") created");
         if (err) console.log("createUser: User konnte nicht erstellt werden. " + err);//throw err;
         console.log("createUser: " + result);
         console.log("User(" + name + ") created");
@@ -44,7 +46,7 @@ var checkUser = function (name, password, call) {
     //console.log(sql);
     connection.query(sql, function (err, result) {
         if (err) throw err;
-        console.log("resultDatenbank:" + result);
+        //console.log("resultDatenbank:" + result);
         call(result);
     });
 };
@@ -64,7 +66,7 @@ var saveToDatabase = function(terminname,ort,start,ende,benachrichtigungZeit,ben
     console.log(sql);
     connection.query(sql, function (err, result) {
         if (err) throw err;
-        console.log("saveToDatabase result ----->" +userid+" ----> " + result['insertId']);
+        console.log("Comment from saveToDatabase result ----->" +userid+" ----> " + result['insertId']);
         connectTerminetToUser( userid ,result['insertId']);
         call();
     });
@@ -80,11 +82,32 @@ var readDatabaseTermine = function(call, userid) {
     var sql = "SELECT * FROM termine, usertermine WHERE termine.idtermine = usertermine.idtermin AND usertermine.iduser = " + userid;
     connection.query(sql, function (err, result) {
         if (err) throw err;
-        console.log("readDatabaseTermine result Termine-------> " + result);
+        console.log("Comment from readDatabaseTermine result Termine-------> " + result);
         call(result);
     });
 };
 
+var updateTermin = function (idTermin,terminname,ort,start,ende,benachrichtigungZeit,benachrichtigungseinheit,beschreibung, ersteFarbe, zweiteFarbe, saveToDatabaseCallback) {
+    var sql = "update termine set terminname = ' " + terminname + "' , ort ='" + ort + "', start = ' " + start + "', ende = '" + ende + "', benachrichtigungZeit = '"+ benachrichtigungZeit +
+        "', benachrichtigungseinheit = '" + benachrichtigungseinheit + "', beschreibung = '" + beschreibung + "', ersteFarbe = '" + ersteFarbe + "',zweiteFarbe = '" + zweiteFarbe + "'   where idtermine = "+ idTermin;
+    console.log("Comment from updateTermin result sql ----> "+ sql);
+    connection.query(sql, function (err, result) {
+        if (err) throw err;
+        saveToDatabaseCallback(result);
+    });
+};
+
+var isTerminFromUser = function (userid, idTermin, isTerminFromUserCallback) {
+    var sql = "select * from usertermine where iduser = " + userid +"  and idtermin =  " + idTermin;
+    console.log("Comment from isTerminFromUser result sql ----> "+ sql);
+    connection.query(sql, function (err, result) {
+        if (err) throw err;
+        isTerminFromUserCallback(result);
+    });
+};
+
+exports.isTerminFromUser = isTerminFromUser;
+exports.updateTermin = updateTermin;
 exports.checkUser = checkUser;
 exports.createUser = createUser;
 exports.saveToDatabase = saveToDatabase;
