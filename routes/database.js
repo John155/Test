@@ -31,7 +31,8 @@ var createUser = function(name ,password , isAdmin) {
     + " VALUES ('" + name + "','" + password + "','" + isAdmin + "')";
     console.log(sql);
     connection.query(sql, function (err, result) {
-        if (err) throw err;
+        if (err) console.log("createUser: User konnte nicht erstellt werden. " + err);//throw err;
+        console.log("createUser: " + result);
         console.log("User(" + name + ") created");
     });
 };

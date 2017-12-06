@@ -5,6 +5,7 @@ var vm;
 
 function getTermine($http) {
     var token = sessionStorage.getItem("token");
+    refreshToolbar();
     if (token) {
         console.log("getTermine-Token: " + token);
         var tok = {
@@ -38,9 +39,24 @@ function getTermine($http) {
     }
 }
 
+function refreshToolbar() {
+    if (sessionStorage.getItem("name")) {
+        document.getElementById("txtUserIndikator").innerText= "Hallo, " + sessionStorage.getItem("name");
+        document.getElementById("btnAnmelden").style.display = "none";
+        document.getElementById("btnRegistrieren").style.display = "none";
+        document.getElementById("btnAbmelden").style.display = "initial";
+    } else {
+        document.getElementById("txtUserIndikator").innerText= "Hallo, nichtangemeldete Person";
+        document.getElementById("btnAnmelden").style.display = "initial";
+        document.getElementById("btnRegistrieren").style.display = "initial";
+        document.getElementById("btnAbmelden").style.display = "none";
+    }
+}
+
 
 
 my.controller('AppCtrl', function($scope, $mdDialog, $http) {
+
 
 
     $scope.registrierenDialog = function () {
@@ -58,10 +74,12 @@ my.controller('AppCtrl', function($scope, $mdDialog, $http) {
                     password: $scope.password
                 };
                 console.log($scope.email);
-                $http.post("/registrieren", JSON.stringify(data)).success(function (data, status) {
-                    console.log('Data posted successfully');
-                });
-                $mdDialog.cancel();
+                if (data.email != null && data.password != null) {
+                    $http.post("/registrieren", JSON.stringify(data)).success(function (data, status) {
+                        console.log('Data posted successfully');
+                    });
+                    $mdDialog.cancel();
+                }
             };
 
             $scope.cancel = function () {
@@ -69,7 +87,7 @@ my.controller('AppCtrl', function($scope, $mdDialog, $http) {
             };
 
         };
-    }
+    };
 
     $scope.loginDialog = function () {
         $mdDialog.show({
@@ -86,20 +104,25 @@ my.controller('AppCtrl', function($scope, $mdDialog, $http) {
                     password: $scope.password
                 };
                 console.log($scope.email);
-                $http.post("/login", JSON.stringify(data)).success(function (data, status) {
-                    if(data.success == true){
-                        var token = data.token;
-                        sessionStorage.setItem('token', token); // write
-                        sessionStorage.setItem('name', data.username);
-                        console.log(sessionStorage.getItem('token')); // read
-                        getTermine($http);
-                        console.log($scope.parent);
-                    } else {
-                        console.log(data.message);
-                    }
-                    console.log('Data posted successfully');
-                });
-                $mdDialog.cancel();
+                if (data.email != null && data.password != null) {
+                    $http.post("/login", JSON.stringify(data)).success(function (data, status) {
+                        if (data.success == true) {
+                            var token = data.token;
+                            sessionStorage.setItem('token', token); // write
+                            sessionStorage.setItem('name', data.username);
+                            console.log(sessionStorage.getItem('token')); // read
+                            //refreshUserindikator();
+                            getTermine($http);
+                            console.log($scope.parent);
+                            $mdDialog.cancel();
+                        } else {
+                            //alert("Falscher Benutzername oder Passwort");
+                            console.log(data.message);
+                        }
+                        console.log('Data posted successfully');
+                    });
+                }
+
             };
 
             $scope.cancel = function () {
@@ -107,15 +130,9 @@ my.controller('AppCtrl', function($scope, $mdDialog, $http) {
             };
 
         };
-    }
+    };
 
-    $scope.registrierenDialog = function () {
-        $mdDialog.show({
-            controller: RegistrierenController,
-            clickOutsideToClose: true,
-            templateUrl: '../ejs/registrieren.ejs'
-        });
-    }
+
 
     $scope.abmelden = function () {
         sessionStorage.clear();

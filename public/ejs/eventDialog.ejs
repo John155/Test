@@ -23,21 +23,21 @@
                     <h2>Termin erstellen</h2>
                     <label ng-model="vm.calendarView" >
                         Titel
-                        <input type="text" class="form-control" ng-model="title">
+                        <input required='true' type="text" class="form-control" ng-model="title">
                     </label>
                     <br>
                     <label>
                         Ort
-                        <input type="text" class="form-control" ng-model="location">
+                        <input required='true' type="text" class="form-control" ng-model="location">
                     </label>
                     <label>
                         Hauptfarbe
-                        <input class="form-control" colorpicker type="text" ng-model="eve.color.primary">
+                        <input required='true' class="form-control" colorpicker type="text" ng-model="eve.color.primary">
                     </label>
 
                     <label>
                         Zweitfarbe
-                        <input class="form-control" colorpicker type="text" ng-model="eve.color.secondary">
+                        <input required='true' class="form-control" colorpicker type="text" ng-model="eve.color.secondary">
                     </label>
 
 
@@ -71,8 +71,8 @@
                     <br>
                     <label>
                         Benachrichtigung
-                        <input type="number" name="Zeit" value="0" size="2" ng-model="alerttime">
-                        <select ng-model="zeitOption">
+                        <input required='true' type="number" name="Zeit" value="0" size="2" ng-model="alerttime">
+                        <select required='true' ng-model="zeitOption">
                             <option value="minuten">Minute/n</option>
                             <option value="stunden">Stunde/n</option>
                         </select>
@@ -81,7 +81,7 @@
                     <br>
                     <label>
                         Beschreibung
-                        <textarea rows="4" cols="50" ng-model="description">
+                        <textarea required='true' rows="4" cols="50" ng-model="description">
                         </textarea>
                     </label>
                 </div>

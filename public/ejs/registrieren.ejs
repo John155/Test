@@ -3,7 +3,7 @@
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <span flex></span>
-                <md-button class="md-raised" ng-click="registrieren()">
+                <md-button type="submit" class="md-raised" ng-click="registrieren()">
                     Registrieren
                 </md-button>
                 <md-button class="md-raised" ng-click="cancel()">
@@ -20,12 +20,13 @@
                 <h2>Registrieren</h2>
                 <label>
                     E-Mail
-                    <input type="text" ng-model="email">
+                    <input type="text" required='true' ng-model="email">
                 </label>
+
                 <br>
                 <label>
                     Password
-                    <input type="password" ng-model="password">
+                    <input type="password" required='true' ng-model="password">
                 </label>
             </div>
         </md-dialog-content>
