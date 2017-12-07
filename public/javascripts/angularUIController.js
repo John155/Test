@@ -264,10 +264,6 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                     pushVmEvent(data);
                 });
                 $mdDialog.cancel();
-            }
-
-            $scope.timeout = function() {
-
             };
 
         }
@@ -312,7 +308,10 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                     $mdDialog.show({
                         controller: DialogController,
                         clickOutsideToClose: true,
-                        templateUrl: '../ejs/eventDialog.ejs'
+                        templateUrl: '../ejs/eventDialog.ejs',
+                        onComplete: function(){
+                            document.getElementById('btnDelete').style.display = "none";
+                        }
                     });
                     console.log(document);
                     console.log(document.getElementById("btnDelete"));
@@ -329,9 +328,6 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                             color:  farbe
                         };
 
-                        $scope.timeout = function() {
-                            document.getElementById('btnDelete').style.display = "none";
-                        };
                         $scope.eve = tempt;
 
                         $scope.date= function ($event, field, event) {
