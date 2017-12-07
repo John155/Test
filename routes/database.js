@@ -98,7 +98,7 @@ var updateTermin = function (idTermin,terminname,ort,start,ende,benachrichtigung
 };
 
 var isTerminFromUser = function (userid, idTermin, isTerminFromUserCallback) {
-    var sql = "select * from usertermine where iduser = " + userid +"  and idtermin =  " + idTermin;
+    var sql = "select * from usertermine where iduser = " + userid +"  and idtermin = " + idTermin;
     console.log("Comment from isTerminFromUser result sql ----> "+ sql);
     connection.query(sql, function (err, result) {
         if (err) throw err;
@@ -106,6 +106,23 @@ var isTerminFromUser = function (userid, idTermin, isTerminFromUserCallback) {
     });
 };
 
+var deleteTermin = function(deleteTermincallback, userid, terminid){
+    var sqlusertermine = "delete from usertermine where iduser = " + userid +" and idtermin = " + terminid;
+    console.log("Comment from deleteTermin result sql ----> "+ sqlusertermine);
+    connection.query(sqlusertermine, function (err, result) {
+        if (err) throw err;
+
+        var sql = " delete from termine where idtermine = " + terminid;
+        connection.query(sql, function (err, result) {
+            if (err) throw err;
+            if (err) console.log("termin konnte nicht gelöscht werden " + err);//throw err;
+            deleteTermincallback(result);
+        });
+    });
+
+};
+
+exports.deleteTermin= deleteTermin;
 exports.isTerminFromUser = isTerminFromUser;
 exports.updateTermin = updateTermin;
 exports.checkUser = checkUser;

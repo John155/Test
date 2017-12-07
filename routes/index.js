@@ -117,7 +117,6 @@ router.post('/editTermin',function(req,res) {
 
     database.isTerminFromUser(userid, idTermin, isTerminFromUserCallback);
 
-
     function isTerminFromUserCallback() {
         database.updateTermin(idTermin,terminname,ort,start,ende,benachrichtigungZeit,benachrichtigungseinheit,beschreibung, ersteFarbe, zweiteFarbe, updateTerminCallBack);
     }
@@ -139,6 +138,29 @@ router.post('/gettermine',function(req,res) {
     var userid = decoded.userid;
     database.readDatabaseTermine(mycallback, userid);
     function mycallback(data) {
+        res.send(data);
+    }
+
+});
+
+router.post('/deleteTermin',function(req,res) {
+    //var jsonRequest  = req.body;
+
+    //console.log("req: " + req.body.token);
+    var jsonRequest  = req.body;
+    var decoded = jwt.decode(req.body.token);
+    var userid = decoded.userid;
+    var idTermin = jsonRequest['idTermin'];
+
+    console.log( "<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>" + idTermin);
+    database.isTerminFromUser(userid, idTermin, isTerminFromUserCallback);
+    function isTerminFromUserCallback() {
+        database.deleteTermin(deleteTermincallback, userid, idTermin);
+    }
+    function deleteTermincallback() {
+        database.readDatabaseTermine(readDatabaseTermineCallback, userid);
+    }
+    function readDatabaseTermineCallback(data) {
         res.send(data);
     }
 

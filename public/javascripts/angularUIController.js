@@ -3,6 +3,29 @@ var my = angular.module('myApp',['ngMaterial', 'ngMessages', 'material.svgAssets
 var vm;
 
 
+function pushVmEvent(data) {
+    vm.events = [];
+    for ( var i = 0 ; i < data.length ; i++) {
+        var farbe = {
+            primary: data[i].ersteFarbe,
+            secondary: data[i].zweiteFarbe
+        };
+        vm.events.push({
+            idTermin: data[i].idtermin,
+            date: vm.lastDateClicked,
+            title: data[i].terminname,
+            location: data[i].ort,
+            description: data[i].beschreibung,
+            alerttime: data[i].benachrichtigungZeit,
+            startsAt: new Date (data[i].start),
+            endsAt: new Date(data[i].ende),
+            draggable: false,
+            resizable: false,
+            color: farbe,
+            benachrichtigungEinheit: data[i].benachrichtigungseinheit
+        });
+    }
+}
 function getTermine($http) {
     var token = sessionStorage.getItem("token");
     refreshToolbar();
@@ -12,27 +35,7 @@ function getTermine($http) {
             token: token
         };
         $http.post("/gettermine", tok).success(function (data, status) {
-            vm.events = [];
-            for ( var i = 0 ; i < data.length ; i++) {
-                var farbe = {
-                    primary: data[i].ersteFarbe,
-                    secondary: data[i].zweiteFarbe
-                };
-                vm.events.push({
-                    idTermin: data[i].idtermin,
-                    date: vm.lastDateClicked,
-                    title: data[i].terminname,
-                    location: data[i].ort,
-                    description: data[i].beschreibung,
-                    alerttime: data[i].benachrichtigungZeit,
-                    startsAt: data[i].start,
-                    endsAt: data[i].ende,
-                    draggable: false,
-                    resizable: false,
-                    color: farbe,
-                    benachrichtigungEinheit: data[i].benachrichtigungseinheit
-                });
-            }
+            pushVmEvent(data);
         });
     } else {
         //alert("Sie sind nicht eingeloggt");
@@ -201,7 +204,6 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
             $scope.date = function ($event, field, event) {
                 vm.toggle($event, field, event);
             };
-
             $scope.title = event.title;
             $scope.description = event.description;
             $scope.location = event.location;
@@ -243,41 +245,30 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                 };
 
                 $http.post("/editTermin", JSON.stringify(editTerminData)).success(function (data, status) {
-                    vm.events = [];
-                    vm.viewDate = new Date();
-                    for ( var i = 0 ; i < data.length ; i++){
-                        var farbe = {
-                            primary: data[i].ersteFarbe,
-                            secondary: data[i].zweiteFarbe
-                        };
-                        vm.events.push({
-                            date: vm.lastDateClicked,
-                            title: data[i].terminname,
-                            location: data[i].ort,
-                            description: data[i].beschreibung,
-                            alerttime: data[i].benachrichtigungZeit,
-                            startsAt: data[i].start,
-                            endsAt: data[i].ende,
-                            draggable: false,
-                            resizable: false,
-                            color: farbe,
-                            alerttime: data[i].benachrichtigungZeit,
-                            benachrichtigungEinheit: data[i].benachrichtigungseinheit
-                        });
-                    }
+                    pushVmEvent(data);
                 });
                 $mdDialog.cancel();
             };
-
 
             $scope.cancel = function() {
                 $mdDialog.cancel();
             };
 
-            $scope.delete = function (event) {
-                alert(event.startsAt.toString())
+            $scope.delete = function () {
+                var deleteTerminData = {
+                    idTermin: event.idTermin,
+                    token:  sessionStorage.getItem("token")
+                };
+
+                $http.post("/deleteTermin", JSON.stringify(deleteTerminData)).success(function (data, status) {
+                    pushVmEvent(data);
+                });
                 $mdDialog.cancel();
             }
+
+            $scope.timeout = function() {
+
+            };
 
         }
     };
@@ -303,6 +294,7 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
 
     vm.timespanClicked = function(date, cell) {
 
+
         if (vm.calendarView === 'month') {
             if ((vm.cellIsOpen && moment(date).startOf('day').isSame(moment(vm.viewDate).startOf('day'))) || cell.events.length === 0 || !cell.inMonth) {
                 vm.cellIsOpen = false;
@@ -322,9 +314,10 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                         clickOutsideToClose: true,
                         templateUrl: '../ejs/eventDialog.ejs'
                     });
+                    console.log(document);
+                    console.log(document.getElementById("btnDelete"));
 
                     function DialogController($scope, $mdDialog, $http) {
-
                         var farbe = {
                             primary: "#f01010",
                             secondary: "#ffffff"
@@ -336,9 +329,12 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                             color:  farbe
                         };
 
+                        $scope.timeout = function() {
+                            document.getElementById('btnDelete').style.display = "none";
+                        };
                         $scope.eve = tempt;
 
-                        $scope.date = function ($event, field, event) {
+                        $scope.date= function ($event, field, event) {
                             vm.toggle($event, field, event);
                         };
 
@@ -367,29 +363,9 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                             };
                             console.log($scope.name);
                             $http.post("/", JSON.stringify(newTermindata)).success(function (data, status) {
-                                vm.events = [];
-                                for ( var i = 0 ; i < data.length ; i++){
-                                    var farbe = {
-                                        primary: data[i].ersteFarbe,
-                                        secondary: data[i].zweiteFarbe
-                                    };
-                                    vm.events.push({
-                                        idTermin: data[i].idTermin,
-                                        date: vm.lastDateClicked,
-                                        title: data[i].terminname,
-                                        location: data[i].ort,
-                                        description: data[i].beschreibung,
-                                        alerttime: data[i].benachrichtigungZeit,
-                                        startsAt: data[i].start,
-                                        endsAt: data[i].ende,
-                                        draggable: false,
-                                        resizable: false,
-                                        color: farbe,
-                                        alerttime: data[i].benachrichtigungZeit,
-                                        benachrichtigungEinheit: data[i].benachrichtigungseinheit
-                                    });
-                                }
+                                pushVmEvent(data);
                             });
+
                             $mdDialog.cancel();
 
                         }
