@@ -4,27 +4,31 @@
             <div class="md-toolbar-tools">
                 <span flex></span>
                 <md-button type="submit" class="md-raised" ng-click="login()">
-                Login
+                    Login
                 </md-button>
                 <md-button class="md-raised" ng-click="cancel()">
-                Cancel
+                    Cancel
                 </md-button>
+                <!--<md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+                </md-button>-->
             </div>
         </md-toolbar>
 
         <md-dialog-content >
             <div class="md-dialog-content">
                 <h1>Login</h1>
-            <label>
-                E-Mail
-                <input type="text" ng-model="email" required>
+                <label>
+                    Name
+                    <input type="text" ng-model="email" required>
                 </label>
                 <br>
                 <label>
-                Password
-                <input type="password" ng-model="password" required>
+                    Password
+                    <input type="password" ng-model="password" required>
                 </label>
             </div>
         </md-dialog-content>
+
     </form>
 </md-dialog>

@@ -212,7 +212,65 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
             $scope.zeitOption = event.benachrichtigungEinheit;
 
 
+
             $scope.eve = event;
+
+            $scope.shareDialog = function () {
+                $mdDialog.show({
+                    controller: ShareController,
+                    clickOutsideToClose: true,
+                    templateUrl: '../ejs/share.ejs'
+                });
+
+                function ShareController($scope, $mdDialog, $http) {
+
+                    $scope.share = function () {
+                        var data = {
+                            name: $scope.shareName,
+                            terminid: event.idTermin,
+                            token: sessionStorage.getItem('token')
+                        };
+                        console.log(data);
+
+
+                        if (data.name != null) {
+                            $http.post("/share", JSON.stringify(data)).success(function (data, status) {
+                                if (data.success == true) {
+                                    console.log(data.message);
+                                    $mdDialog.cancel();
+                                } else {
+                                    console.log(data.message);
+                                }
+                                console.log('Data posted successfully');
+                            });
+                        }
+
+                    };
+
+                    $scope.cancelShare = function () {
+                        $mdDialog.cancel();
+                    };
+
+                };
+            };
+            /*$http.post("/share", JSON.stringify(data)).success(function (data, status) {
+                if (data.success == true) {
+                    var token = data.token;
+                    sessionStorage.setItem('token', token); // write
+                    sessionStorage.setItem('name', data.username);
+                    console.log(sessionStorage.getItem('token')); // read
+                    //refreshUserindikator();
+                    getTermine($http);
+                    console.log($scope.parent);
+                    $mdDialog.cancel();
+                } else {
+                    //alert("Falscher Benutzername oder Passwort");
+                    console.log(data.message);
+                }
+                console.log('Data posted successfully');
+            });
+            */
+
 
             $scope.save = function() {
                 /*event.title = $scope.title;
@@ -311,6 +369,7 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                         templateUrl: '../ejs/eventDialog.ejs',
                         onComplete: function(){
                             document.getElementById('btnDelete').style.display = "none";
+                            document.getElementById('btnShare').style.display = "none";
                         }
                     });
                     console.log(document);

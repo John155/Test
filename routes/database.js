@@ -25,6 +25,40 @@ var connectTerminetToUser =  function  (userid , terminID) {
     });
 };
 
+var share = function (terminId, name, fromUserId, call) {
+    console.log("database: share()");
+    var sql = "SELECT * FROM usertermine WHERE iduser = " + fromUserId + " AND idtermin = " + terminId + "";
+    console.log("database: share()");
+    console.log(sql);
+    connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log(result);
+        if (result[0] == null) {
+            call("keine Berechtigung für den Termin");
+        } else {
+            sql = "SELECT * FROM users WHERE name = '" + name + "'";
+            console.log(sql);
+            connection.query(sql, function (err, result) {
+                if (err) throw err;
+                console.log(result);
+                if (result[0] == null) {
+                    call("Kein User mit diesem Namen");
+                } else {
+                    var userId = result[0].id;
+                    sql = "INSERT INTO usertermine (iduser,idtermin) VALUES (" + userId + "," + terminId + ")";
+                    console.log(sql);
+                    connection.query(sql, function (err, result) {
+                        if (err) throw err;
+                        console.log(result);
+                        call("Success");
+                    })
+                }
+            })
+        }
+    })
+};
+
+
 var createUser = function(name, email ,password , isAdmin) {
 
     var sql = "INSERT INTO users (name,email,password,admin)"
@@ -114,7 +148,7 @@ var deleteTermin = function(deleteTermincallback, userid, terminid){
 
         var sql = " delete from termine where idtermine = " + terminid;
         connection.query(sql, function (err, result) {
-            if (err) throw err;
+            //if (err) throw err;
             if (err) console.log("termin konnte nicht gelöscht werden " + err);//throw err;
             deleteTermincallback(result);
         });
@@ -122,6 +156,7 @@ var deleteTermin = function(deleteTermincallback, userid, terminid){
 
 };
 
+exports.share = share;
 exports.deleteTermin= deleteTermin;
 exports.isTerminFromUser = isTerminFromUser;
 exports.updateTermin = updateTermin;

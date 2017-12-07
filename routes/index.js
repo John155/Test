@@ -60,6 +60,54 @@ router.post('/login', function(req, res) {
     };
 });
 
+router.post('/share', function (req, res) {
+    var jsonRequest  = req.body;
+    console.log(jsonRequest['name']);
+    console.log(jsonRequest['terminid']);
+    console.log(jsonRequest['token']);
+
+    var decoded = jwt.decode(jsonRequest['token']);
+    var userid = decoded.userid;
+
+    database.share(jsonRequest['terminid'],jsonRequest['name'],userid, myCallback);
+
+    function myCallback(data) {
+        console.log("myCallback");
+        console.log("myCAllback -----> " + data);
+
+        /*
+        if (data[0] == null){
+            console.log("passwort falsch");
+            res.json({
+                success: false,
+                message: 'Username oder Passwort falsch'
+            });
+        } else {
+            const payload = {
+                name: data[0].name,
+                userid: data[0].id
+            };
+            var token = jwt.sign(payload, database.superSecret, {
+                //expiresInMinutes: 1440 // expires in 24 hours
+            });
+
+            console.log(token);
+            res.json({
+                success: true,
+                message: 'Hallo, ' + data[0].name,
+                userid: data[0].id,
+                username: data[0].name,
+                token: token
+            });
+        }
+        */
+        res.json({
+            success: true,
+            message: data
+        })
+    };
+});
+
 
 
 router.post('/',function(req,res) {
