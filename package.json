@@ -11,6 +11,7 @@
     "angular": "^1.6.7",
     "angular-material": "^1.1.5",
     "angular-material-calendar": "^0.2.14",
+    "bcrypt": "^1.0.3",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
@@ -23,6 +24,7 @@
     "morgan": "~1.9.0",
     "mysql": "^2.15.0",
     "ngx-bootstrap": "^2.0.0-beta.10",
+    "password-hash": "^1.2.2",
     "serve-favicon": "~2.4.5"
   }
 }

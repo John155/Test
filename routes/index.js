@@ -4,6 +4,7 @@ var mysql = require('mysql');
 var database = require('./database.js');  // This will load your fitness module
 var jwt    = require('jsonwebtoken');
 var jwtDecode = require('jwt-decode');
+var passwordHash = require('password-hash');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -12,13 +13,20 @@ router.get('/', function(req, res, next) {
 
 router.post('/registrieren', function(req, res) {
     var jsonRequest  = req.body;
-    console.log(jsonRequest['email']);
-    database.createUser( jsonRequest['name'],jsonRequest['email'],jsonRequest['password'],0);
+    console.log(jsonRequest['name']);
+
+    database.createUser( jsonRequest['name'],jsonRequest['email'],jsonRequest['password'],0,myCallback);
+
+    function myCallback(data) {
+        console.log(data);
+        res.send(data);
+    }
 });
 
 router.post('/login', function(req, res) {
     var jsonRequest  = req.body;
     console.log(jsonRequest['email']);
+
 
     var result = database.checkUser( jsonRequest['email'],jsonRequest['password'], myCallback);
     /*res.json({

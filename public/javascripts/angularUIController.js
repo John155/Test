@@ -85,8 +85,16 @@ my.controller('AppCtrl', function($scope, $mdDialog, $http) {
                 if (data.name != null && data.email != null && data.password != null) {
                     $http.post("/registrieren", JSON.stringify(data)).success(function (data, status) {
                         console.log('Data posted successfully');
+                        console.log(data);
+                        if (data.success == true) {
+                            console.log(data.message);
+                            $mdDialog.cancel();
+                        } else {
+                            console.log(data.message);
+                            alert(data.message);
+                        }
                     });
-                    $mdDialog.cancel();
+                    //$mdDialog.cancel();
                 }
             };
 
@@ -124,7 +132,7 @@ my.controller('AppCtrl', function($scope, $mdDialog, $http) {
                             console.log($scope.parent);
                             $mdDialog.cancel();
                         } else {
-                            //alert("Falscher Benutzername oder Passwort");
+                            alert("Falscher Benutzername oder Passwort");
                             console.log(data.message);
                         }
                         console.log('Data posted successfully');

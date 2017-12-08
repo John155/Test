@@ -1,6 +1,9 @@
 
 var mysql      = require('mysql');
 var jwt    = require('jsonwebtoken');
+var passwordHash = require('password-hash');
+var bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 var connection = mysql.createConnection({
     host     : '213.239.205.41',
@@ -59,29 +62,53 @@ var share = function (terminId, name, fromUserId, call) {
 };
 
 
-var createUser = function(name, email ,password , isAdmin) {
+var createUser = function(name, email ,password , isAdmin, call) {
+
+    //var hashedPassword = passwordHash.generate(password);
+    var hashedPassword = bcrypt.hashSync(password, saltRounds);
+    console.log("Passwort ungehashed: " + password);
+    console.log("Passwort gehashed: " + hashedPassword);
 
     var sql = "INSERT INTO users (name,email,password,admin)"
-    + " VALUES ('" + name + "','" + email + "','" + password + "','" + isAdmin + "')";
+    + " VALUES ('" + name + "','" + email + "','" + hashedPassword + "','" + isAdmin + "')";
     console.log(sql);
     connection.query(sql, function (err, result) {
-        if (err) throw err;
+        //if (err) throw err;
         //console.log("User(" + name + ") created");
-        if (err) console.log("createUser: User konnte nicht erstellt werden. " + err);//throw err;
-        console.log("createUser: " + result);
-        console.log("User(" + name + ") created");
+        if (err) {
+            console.log("createUser: User konnte nicht erstellt werden. " + err);//throw err;
+            call({
+                success:false,
+                message:"Username bereits vergeben"
+            });
+        } else {
+            console.log("createUser: " + result);
+            console.log("User(" + name + ") created");
+            call({
+                success:true,
+                message:"User(" + name + ") registriert"
+            })
+        }
     });
 };
 
 var checkUser = function (name, password, call) {
     console.log("checkUser...");
-    var sql = "SELECT * FROM users WHERE name = '" + name + "' and password = '" + password + "'";
+    var sql = "SELECT * FROM users WHERE name = '" + name + "'";
     //var sql = "SELECT * FROM users WHERE name = '" + "user2" + "' and password = '" + "pass2" + "'";
     //console.log(sql);
     connection.query(sql, function (err, result) {
         if (err) throw err;
         //console.log("resultDatenbank:" + result);
-        call(result);
+        //if(passwordHash.verify(password, result[0].password)) {
+        if(bcrypt.compareSync(password, result[0].password)) {
+            call(result);
+        } else {
+            result[0] = null;
+            call(result);
+        }
+
+
     });
 };
 
