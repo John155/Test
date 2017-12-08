@@ -13,19 +13,19 @@ router.get('/', function(req, res, next) {
 
 router.post('/registrieren', function(req, res) {
     var jsonRequest  = req.body;
-    console.log(jsonRequest['name']);
+    //console.log(jsonRequest['name']);
 
     database.createUser( jsonRequest['name'],jsonRequest['email'],jsonRequest['password'],0,myCallback);
 
     function myCallback(data) {
-        console.log(data);
+        //console.log(data);
         res.send(data);
     }
 });
 
 router.post('/login', function(req, res) {
     var jsonRequest  = req.body;
-    console.log(jsonRequest['email']);
+    //console.log(jsonRequest['email']);
 
 
     var result = database.checkUser( jsonRequest['email'],jsonRequest['password'], myCallback);
@@ -37,12 +37,11 @@ router.post('/login', function(req, res) {
     });*/
 
     function myCallback(data) {
-        console.log("myCallback");
-        console.log("myCAllback -----> " + data);
+        //console.log("myCAllback -----> " + data);
 
 
         if (data[0] == null){
-            console.log("passwort falsch");
+            //console.log("passwort falsch");
             res.json({
                 success: false,
                 message: 'Username oder Passwort falsch'
@@ -56,7 +55,7 @@ router.post('/login', function(req, res) {
                 //expiresInMinutes: 1440 // expires in 24 hours
             });
 
-            console.log(token);
+            //console.log(token);
             res.json({
                 success: true,
                 message: 'Hallo, ' + data[0].name,
@@ -70,9 +69,9 @@ router.post('/login', function(req, res) {
 
 router.post('/share', function (req, res) {
     var jsonRequest  = req.body;
-    console.log(jsonRequest['name']);
-    console.log(jsonRequest['terminid']);
-    console.log(jsonRequest['token']);
+    //console.log(jsonRequest['name']);
+    //console.log(jsonRequest['terminid']);
+    //console.log(jsonRequest['token']);
 
     var decoded = jwt.decode(jsonRequest['token']);
     var userid = decoded.userid;
@@ -80,35 +79,7 @@ router.post('/share', function (req, res) {
     database.share(jsonRequest['terminid'],jsonRequest['name'],userid, myCallback);
 
     function myCallback(data) {
-        console.log("myCallback");
-        console.log("myCAllback -----> " + data);
 
-        /*
-        if (data[0] == null){
-            console.log("passwort falsch");
-            res.json({
-                success: false,
-                message: 'Username oder Passwort falsch'
-            });
-        } else {
-            const payload = {
-                name: data[0].name,
-                userid: data[0].id
-            };
-            var token = jwt.sign(payload, database.superSecret, {
-                //expiresInMinutes: 1440 // expires in 24 hours
-            });
-
-            console.log(token);
-            res.json({
-                success: true,
-                message: 'Hallo, ' + data[0].name,
-                userid: data[0].id,
-                username: data[0].name,
-                token: token
-            });
-        }
-        */
         res.json({
             success: true,
             message: data
@@ -120,7 +91,7 @@ router.post('/share', function (req, res) {
 
 router.post('/',function(req,res) {
     var jsonRequest  = req.body;
-    console.log(jsonRequest);
+    //console.log(jsonRequest);
 
     var terminname = jsonRequest['title'];
     var ort = jsonRequest['location'];
@@ -132,11 +103,11 @@ router.post('/',function(req,res) {
     var ersteFarbe = jsonRequest['ersteFarbe'];
     var zweiteFarbe = jsonRequest['zweiteFarbe']
 
-    console.log(" token from / result body ----> "+req.body.token);
+    //console.log(" token from / result body ----> "+req.body.token);
     var decoded = jwt.decode(req.body.token);
 
     var userid = decoded.userid;
-    console.log(" token from / result userid ----> "+ userid);
+    //console.log(" token from / result userid ----> "+ userid);
 
     database.saveToDatabase(terminname,ort,start,ende,benachrichtigungZeit,benachrichtigungseinheit,beschreibung, ersteFarbe, zweiteFarbe, saveToDatabaseCallback, userid);
 
@@ -152,7 +123,7 @@ router.post('/',function(req,res) {
 router.post('/editTermin',function(req,res) {
 
     var jsonRequest  = req.body;
-    console.log("Comment from editTermin -----> " + jsonRequest);
+    //console.log("Comment from editTermin -----> " + jsonRequest);
 
     var idTermin = jsonRequest['idTermin'];
     var terminname = jsonRequest['title'];
@@ -208,7 +179,7 @@ router.post('/deleteTermin',function(req,res) {
     var userid = decoded.userid;
     var idTermin = jsonRequest['idTermin'];
 
-    console.log( "<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>" + idTermin);
+    //console.log( "<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>" + idTermin);
     database.isTerminFromUser(userid, idTermin, isTerminFromUserCallback);
     function isTerminFromUserCallback() {
         database.deleteTermin(deleteTermincallback, userid, idTermin);

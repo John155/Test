@@ -6,7 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
-var users = require('./routes/users');
 var database = require('./routes/database.js');
 
 var app = express();
@@ -22,32 +21,6 @@ var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 app.set('superSecret', database.secret);
 
-//SampleUser
-
-    // create a sample user
-    /*var nick = new usersmysql.user({
-        name: 'Nick Cerminara',
-        password: 'password',
-        admin: true
-    });
-
-
-    // save the sample user
-    nick.save(function(err) {
-        if (err) throw err;
-
-        console.log('User saved successfully');
-        res.json({ success: true });
-    });
-    */
-
-
-
-
-
-
-
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -62,7 +35,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
 
 app.use(express.static(__dirname + '/public'));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));

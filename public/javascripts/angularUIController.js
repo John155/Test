@@ -30,7 +30,7 @@ function getTermine($http) {
     var token = sessionStorage.getItem("token");
     refreshToolbar();
     if (token) {
-        console.log("getTermine-Token: " + token);
+        //console.log("getTermine-Token: " + token);
         var tok = {
             token: token
         };
@@ -79,18 +79,17 @@ my.controller('AppCtrl', function($scope, $mdDialog, $http) {
                     password: $scope.password
                 };
 
-                console.log($scope.username);
-                console.log($scope.email);
-                console.log($scope.password);
+                //console.log($scope.username);
+                //console.log($scope.email);
                 if (data.name != null && data.email != null && data.password != null) {
                     $http.post("/registrieren", JSON.stringify(data)).success(function (data, status) {
-                        console.log('Data posted successfully');
-                        console.log(data);
+                        //console.log('Data posted successfully');
+                        //console.log(data);
                         if (data.success == true) {
-                            console.log(data.message);
+                            //console.log(data.message);
                             $mdDialog.cancel();
                         } else {
-                            console.log(data.message);
+                            //console.log(data.message);
                             alert(data.message);
                         }
                     });
@@ -119,23 +118,23 @@ my.controller('AppCtrl', function($scope, $mdDialog, $http) {
                     email: $scope.email,
                     password: $scope.password
                 };
-                console.log($scope.email);
+                //console.log($scope.email);
                 if (data.email != null && data.password != null) {
                     $http.post("/login", JSON.stringify(data)).success(function (data, status) {
                         if (data.success == true) {
                             var token = data.token;
                             sessionStorage.setItem('token', token); // write
                             sessionStorage.setItem('name', data.username);
-                            console.log(sessionStorage.getItem('token')); // read
+                            //console.log(sessionStorage.getItem('token')); // read
                             //refreshUserindikator();
                             getTermine($http);
-                            console.log($scope.parent);
+                            //console.log($scope.parent);
                             $mdDialog.cancel();
                         } else {
                             alert("Falscher Benutzername oder Passwort");
-                            console.log(data.message);
+                            //console.log(data.message);
                         }
-                        console.log('Data posted successfully');
+                        //console.log('Data posted successfully');
                     });
                 }
 
@@ -238,18 +237,18 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                             terminid: event.idTermin,
                             token: sessionStorage.getItem('token')
                         };
-                        console.log(data);
+                        //console.log(data);
 
 
                         if (data.name != null) {
                             $http.post("/share", JSON.stringify(data)).success(function (data, status) {
                                 if (data.success == true) {
-                                    console.log(data.message);
+                                    //console.log(data.message);
                                     $mdDialog.cancel();
                                 } else {
-                                    console.log(data.message);
+                                    //console.log(data.message);
                                 }
-                                console.log('Data posted successfully');
+                                //console.log('Data posted successfully');
                             });
                         }
 
@@ -261,31 +260,10 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
 
                 };
             };
-            /*$http.post("/share", JSON.stringify(data)).success(function (data, status) {
-                if (data.success == true) {
-                    var token = data.token;
-                    sessionStorage.setItem('token', token); // write
-                    sessionStorage.setItem('name', data.username);
-                    console.log(sessionStorage.getItem('token')); // read
-                    //refreshUserindikator();
-                    getTermine($http);
-                    console.log($scope.parent);
-                    $mdDialog.cancel();
-                } else {
-                    //alert("Falscher Benutzername oder Passwort");
-                    console.log(data.message);
-                }
-                console.log('Data posted successfully');
-            });
-            */
+
 
 
             $scope.save = function() {
-                /*event.title = $scope.title;
-                event.description = $scope.description;
-                event.location = $scope.location;
-                event.alerttime = $scope.alerttime;
-                event.color = $scope.color;*/
                 var farbe = {
                     primary: "#f01010",
                     secondary: "#ffffff"
@@ -380,8 +358,6 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                             document.getElementById('btnShare').style.display = "none";
                         }
                     });
-                    console.log(document);
-                    console.log(document.getElementById("btnDelete"));
 
                     function DialogController($scope, $mdDialog, $http) {
                         var farbe = {
@@ -424,7 +400,7 @@ my.controller('DraggableExternalEventsCtrl', function($scope,moment, calendarCon
                                 ersteFarbe: tempt.color.primary.toString(),
                                 zweiteFarbe: tempt.color.secondary.toString()
                             };
-                            console.log($scope.name);
+                            //console.log($scope.name);
                             $http.post("/", JSON.stringify(newTermindata)).success(function (data, status) {
                                 pushVmEvent(data);
                             });
